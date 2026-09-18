@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#c62829">
+  <meta name="description" content="OhmBot – Orientierung rund um dein Studium an der TH Nürnberg. Ein studentisches IT-Projekt mit nachvollziehbaren Quellen.">
+  <title>OhmBot · Dein Studium. Deine Fragen.</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body data-mode="live">
+  <a class="skip-link" href="#question">Zum Chat springen</a>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="OhmBot Startseite"><span class="brand-mark" aria-hidden="true">o<span></span></span>OhmBot<span class="project-tag">STUDIERENDENPROJEKT</span></a>
+    <button class="mobile-reset" id="new-chat-top" type="button">＋ Neuer Chat</button>
+    <a class="university-link" href="https://www.th-nuernberg.de/" target="_blank" rel="noopener noreferrer">TH Nürnberg <span aria-hidden="true">↗</span></a>
+  </header>
+  <div class="app-layout">
+    <aside class="sidebar" aria-label="Orientierung">
+      <div>
+        <div class="sidebar-label">DEIN STUDIENBEGLEITER</div>
+        <button class="new-chat" id="new-chat" type="button"><span aria-hidden="true">＋</span> Neuer Chat</button>
+        <div class="sidebar-section">
+          <p class="sidebar-label">WOBEI ICH HELFEN KANN</p>
+          <button class="topic" data-question="Wie ist der Bachelor Informatik aufgebaut?"><span aria-hidden="true">01</span> Bachelor Informatik <span aria-hidden="true">↗</span></button>
+          <button class="topic" data-question="Wann ist die Prüfungsanmeldung im Wintersemester 2026/27?"><span aria-hidden="true">02</span> Prüfungen & Termine <span aria-hidden="true">↗</span></button>
+          <button class="topic" data-question="Was muss ich zum Praxissemester in Informatik wissen?"><span aria-hidden="true">03</span> Praxissemester <span aria-hidden="true">↗</span></button>
+          <button class="topic" data-question="Wo finde ich SPO, Studienplan und Modulhandbuch für Informatik?"><span aria-hidden="true">04</span> Studiendokumente <span aria-hidden="true">↗</span></button>
+        </div>
+        <div class="sidebar-section official-links">
+          <p class="sidebar-label">DIREKT ZUR HOCHSCHULE</p>
+          <a href="https://www.th-nuernberg.de/studiengang/informatik-bsc/" target="_blank" rel="noopener noreferrer">Studiengang Informatik <span aria-hidden="true">↗</span></a>
+          <a href="https://www.th-nuernberg.de/fakultaeten/in/studium/studienberatung-und-anmeldung/" target="_blank" rel="noopener noreferrer">Studienberatung <span aria-hidden="true">↗</span></a>
+          <a href="https://www.th-nuernberg.de/studium-karriere/wichtiges-zum-studienstart/termine-im-ueberblick/wintersemester/" target="_blank" rel="noopener noreferrer">Semestertermine <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+      <div class="source-note"><span class="source-icon" aria-hidden="true">↗</span><strong>Wissen mit Quellen.</strong><p>Meine Antworten basieren auf ausgewählten Hochschulinformationen. Die verlinkten Originalquellen helfen dir weiter.</p><small>Ein IT-Projekt an der TH Nürnberg.<br>Kein offizielles Auskunftsangebot.</small></div>
+    </aside>
+    <main class="main-panel" id="main">
+      <div class="chat-topline"><span><span class="status-dot" aria-hidden="true"></span> Orientierung für dein Studium</span><span class="focus-label">FOKUS INFORMATIK B. SC.</span></div>
+      <p class="demo-banner" id="demo-banner" hidden>Lokale Demo ohne KI: Antworten werden zum Testen über Stichwörter ausgewählt. Es werden keine Daten an OpenAI gesendet.</p>
+      <section class="chat-scroll" id="chat-scroll" aria-label="Chat mit OhmBot">
+        <div class="welcome" id="welcome">
+          <div class="eyebrow">FRAGEN GEHÖREN ZUM STUDIUM.</div>
+          <h1>Dein Studium.<br>Deine Fragen. <span>OhmBot.</span></h1>
+          <p class="welcome-text">Hallo, ich bin OhmBot. Wie kann ich dir bei Fragen rund um dein Studium an der TH Nürnberg helfen?</p>
+          <div class="quick-questions" aria-label="Beispielfragen">
+            <button data-question="Wie ist der Bachelor Informatik aufgebaut?"><span class="card-number">01 / STUDIUM</span><strong>Wie ist mein Studium aufgebaut?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
+            <button data-question="Was muss ich zum Praxissemester in Informatik wissen?"><span class="card-number">02 / PRAXIS</span><strong>Was erwartet mich im Praxissemester?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
+            <button data-question="Wo finde ich das Modulhandbuch für Informatik?"><span class="card-number">03 / DOKUMENTE</span><strong>Wo finde ich das Modulhandbuch?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
+            <button data-question="Wer berät mich zum Bachelor Informatik?"><span class="card-number">04 / BERATUNG</span><strong>Wer hilft mir bei Studienfragen?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
+          </div>
+        </div>
+        <div class="messages" id="messages" role="log" aria-label="Chatverlauf" aria-live="polite" aria-relevant="additions"></div>
+      </section>
+      <div class="composer-area">
+        <div class="error-box" id="error-box" role="alert" hidden><p id="error-text"></p><button id="retry" type="button">Erneut versuchen</button></div>
+        <div class="loading" id="loading" role="status" hidden><span class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></span> OhmBot sucht in den Hochschulinformationen …</div>
+        <form id="chat-form" class="composer">
+          <label for="question" class="sr-only">Deine Frage an OhmBot</label>
+          <textarea id="question" name="question" placeholder="Deine Frage zum Studium …" rows="1" maxlength="1500" required aria-describedby="input-help privacy-note"></textarea>
+          <button class="send-button" id="send" type="submit" aria-label="Frage senden"><span class="send-label">Senden</span><span aria-hidden="true">↑</span></button>
+        </form>
+        <div class="input-meta"><span id="input-help">Enter zum Senden · Shift + Enter für eine neue Zeile</span><span id="char-count">0 / 1500</span></div>
+        <p class="privacy-note" id="privacy-note">Bitte keine persönlichen Daten eingeben. Frage und letzter Gesprächskontext werden zur Antwortauswahl an OpenAI übermittelt. Der Verlauf bleibt nur in diesem Tab.</p>
+        <p class="mobile-project-note">Studierendenprojekt · Kein offizielles Auskunftsangebot der TH Nürnberg.</p>
+      </div>
+    </main>
+  </div>
+  <noscript><p class="noscript">Bitte aktiviere JavaScript, um OhmBot zu verwenden.</p></noscript>
+</body>
+</html>

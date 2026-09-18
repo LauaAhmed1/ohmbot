@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "updated_at": "2026-09-18",
+  "editorial_note": "Kuratierte Startbasis, keine vollständige Studienberatung. Quellen am 18.09.2026 geprüft. review_by ist unsere redaktionelle Wiedervorlage, keine Hochschulfrist. Nach diesem Datum wird der Eintrag automatisch nicht mehr verwendet. PDF-Regelwerke sind noch nicht vollständig ausgewertet. Insbesondere keine verbindlichen Aussagen zu individueller SPO-Zuordnung, Wiederholungsversuchen, Zulassungsvoraussetzungen oder Bearbeitungsfristen der Bachelorarbeit.",
+  "sources": [
+    { "id": "degree", "title": "Bachelor Informatik – Studiengang und Dokumente", "url": "https://www.th-nuernberg.de/studiengang/informatik-bsc/", "checked_at": "2026-09-18" },
+    { "id": "structure", "title": "Bachelor Informatik – Studienaufbau und Praxis", "url": "https://www.th-nuernberg.de/studiengangsdaten/inhaltsseiten/informatik-bsc/", "checked_at": "2026-09-18" },
+    { "id": "winter", "title": "Zentraler Terminplan – Wintersemester 2026/27", "url": "https://www.th-nuernberg.de/studium-karriere/wichtiges-zum-studienstart/termine-im-ueberblick/wintersemester/", "checked_at": "2026-09-18" },
+    { "id": "summer", "title": "Zentraler Terminplan – Sommersemester 2026", "url": "https://www.th-nuernberg.de/studium-karriere/wichtiges-zum-studienstart/termine-im-ueberblick/sommersemester/", "checked_at": "2026-09-18" },
+    { "id": "advice", "title": "Fakultät Informatik – Studienberatung und Anmeldung", "url": "https://www.th-nuernberg.de/fakultaeten/in/studium/studienberatung-und-anmeldung/", "checked_at": "2026-09-18" },
+    { "id": "office", "title": "Fakultät Informatik – Dekanat und Studienbüro", "url": "https://www.th-nuernberg.de/fakultaeten/in/fakultaet/dekanat/", "checked_at": "2026-09-18" },
+    { "id": "services", "title": "TH Nürnberg – Kontakt und Öffnungszeiten", "url": "https://www.th-nuernberg.de/wie-erreichen-sie-uns/oeffnungszeiten/", "checked_at": "2026-09-18" }
+  ],
+  "entries": [
+    {
+      "id": "university", "title": "Die TH Nürnberg", "scope": "Allgemein", "keywords": ["hochschule", "ohm", "name", "allgemein"],
+      "text": "TH Nürnberg steht für Technische Hochschule Nürnberg Georg Simon Ohm. Zu ihren Angeboten gehört der Bachelorstudiengang Informatik mit dem Abschluss Bachelor of Science.",
+      "source_ids": ["degree"], "review_by": "2027-03-14", "kind": "fact"
+    },
+    {
+      "id": "structure", "title": "Studienaufbau · Bachelor Informatik", "scope": "Bachelor Informatik, allgemeine Studiengangsbeschreibung; keine individuelle SPO-Zuordnung", "keywords": ["aufbau", "studienaufbau", "semester", "dauer", "informatik", "grundlagen"],
+      "text": "Der Bachelor Informatik hat eine Regelstudienzeit von sieben Semestern. In Semester 1 und 2 stehen Grundlagen wie Mathematik, Programmierung und theoretische Informatik im Mittelpunkt. Danach folgen Pflicht- und Wahlpflichtmodule. Als Vertiefungen werden Machine Learning und IT-Sicherheit genannt.",
+      "source_ids": ["structure"], "review_by": "2027-03-14", "kind": "fact"
+    },
+    {
+      "id": "practice", "title": "Praxissemester · Bachelor Informatik", "scope": "Bachelor Informatik, allgemeine Studiengangsbeschreibung; keine Zulassungsregeln", "keywords": ["praxis", "praxissemester", "praktikum", "wochen", "fünftes"],
+      "text": "Das Praxissemester ist im fünften Semester vorgesehen. Laut Studiengangsbeschreibung umfasst das Praktikum im Unternehmen 20 Wochen und wird von einem Professor der Fakultät begleitet. Hinzu kommen ein Praxisseminar und eine Lehrveranstaltung zu Projektmanagement. Individuelle Zulassungs- und Anerkennungsfragen sind in dieser Wissensbasis nicht geklärt.",
+      "source_ids": ["structure"], "review_by": "2027-03-14", "kind": "fact"
+    },
+    {
+      "id": "thesis", "title": "Bachelorarbeit · Grenzen dieser Wissensbasis", "scope": "Bachelor Informatik; keine verlässlichen Detailregeln hinterlegt", "keywords": ["bachelorarbeit", "abschlussarbeit", "bearbeitungsdauer", "anmeldung", "ects"],
+      "text": "Zu Voraussetzungen, Anmeldung, Bearbeitungsdauer und Abgabe der Bachelorarbeit habe ich keine verlässlich geprüften Detailregeln hinterlegt. Bitte prüfe die für dich geltende Studien- und Prüfungsordnung und den Studienplan. Beide sind auf der Informatik-Studiengangsseite verlinkt; bei Fragen hilft die Studienfachberatung.",
+      "source_ids": ["degree", "advice"], "review_by": "2027-03-14", "kind": "gap"
+    },
+    {
+      "id": "spo", "title": "Studien- und Prüfungsordnung (SPO)", "scope": "Bachelor Informatik; nur Dokumentenwegweiser, keine Rechtsauslegung", "keywords": ["spo", "prüfungsordnung", "studienordnung", "wiederholung", "prüfungsregeln"],
+      "text": "Die SPO regelt den Studiengang und seine Prüfungsleistungen. Du findest den Link auf der Informatik-Studiengangsseite unter „Wichtige Dokumente“. Welche Fassung für deinen Studienbeginn gilt, muss gesondert geprüft werden; hierzu enthält diese Startbasis keine Zuordnung.",
+      "source_ids": ["degree"], "review_by": "2027-03-14", "kind": "fact"
+    },
+    {
+      "id": "study-plan", "title": "Studienplan finden", "scope": "Bachelor Informatik; Dokumentenwegweiser", "keywords": ["studienplan", "verteilung", "fächer", "dokumente"],
+      "text": "Der Studienplan zeigt die Verteilung von Fächern, Praxissemester und Abschlussarbeit auf die Studienabschnitte. Die Informatik-Studiengangsseite verlinkt ihn unter „Wichtige Dokumente“.",
+      "source_ids": ["degree"], "review_by": "2027-03-14", "kind": "fact"
+    },
+    {
+      "id": "module-handbook", "title": "Modulhandbuch finden", "scope": "Bachelor Informatik; Dokumentenwegweiser, keine einzelnen Modulregeln", "keywords": ["modulhandbuch", "module", "lernziele", "workload", "dokumente"],
+      "text": "Im Modulhandbuch stehen Inhalte, Lernziele, Arbeitsaufwand und Prüfungsleistungen der Module. Der Link befindet sich auf der Informatik-Studiengangsseite unter „Wichtige Dokumente“. Die einzelnen Modulbeschreibungen sind noch nicht in dieser Wissensbasis enthalten.",
+      "source_ids": ["degree"], "review_by": "2027-03-14", "kind": "fact"
+    },
+    {
+      "id": "winter-semester", "title": "Semesterinformationen · Wintersemester 2026/27", "scope": "Nur Wintersemester 2026/27; zentraler Terminplan, Fakultätsabweichungen möglich", "keywords": ["wintersemester", "semesterbeginn", "semesterende", "vorlesungen", "2026", "2027"],
+      "text": "Das Wintersemester 2026/27 beginnt am 01.10.2026 und endet am 14.03.2027. Der zentrale Terminplan nennt den 22.01.2027 als letzten Lehrveranstaltungstag. Beachte zusätzlich die Bekanntmachungen deiner Fakultät.",
+      "source_ids": ["winter"], "review_by": "2026-10-31", "kind": "fact"
+    },
+    {
+      "id": "exam-registration", "title": "Prüfungsanmeldung · Wintersemester 2026/27", "scope": "Nur Wintersemester 2026/27; zentraler Terminplan; keine Aussage über individuelle Zulassung", "keywords": ["prüfungsanmeldung", "prüfungen", "anmelden", "frist", "studyohm"],
+      "text": "Für das Wintersemester 2026/27 nennt der zentrale Terminplan die Online-Prüfungsanmeldung in StudyOhm vom 21.10.2026 um 12:00 Uhr bis 02.11.2026 um 23:59 Uhr. Prüfe vor der Anmeldung den aktuellen Originalterminplan und Hinweise deiner Fakultät.",
+      "source_ids": ["winter"], "review_by": "2026-11-02", "kind": "fact"
+    },
+    {
+      "id": "exam-period", "title": "Prüfungszeitraum · Wintersemester 2026/27", "scope": "Nur Wintersemester 2026/27; zentraler allgemeiner Prüfungszeitraum, keine individuellen Prüfungstermine", "keywords": ["prüfungszeitraum", "prüfungsphase", "klausuren", "prüfungstermin"],
+      "text": "Im Wintersemester 2026/27 sieht der zentrale Terminplan schriftliche Prüfungen vom 23.01.2027 bis 12.02.2027 vor. Vorgezogene Prüfungen und allgemeinwissenschaftliche Wahlpflichtfächer haben eigene Zeiträume. Der konkrete Termin deiner Prüfung ist hier nicht hinterlegt.",
+      "source_ids": ["winter"], "review_by": "2026-11-30", "kind": "fact"
+    },
+    {
+      "id": "reregistration", "title": "Rückmeldung zum Sommersemester 2027", "scope": "Nur Rückmeldung zum Sommersemester 2027; Wissensstand 18.09.2026", "keywords": ["rückmeldung", "rückmelden", "sommersemester", "beitrag"],
+      "text": "Am 18.09.2026 war im zentralen Terminplan noch kein Rückmeldezeitraum zum Sommersemester 2027 angegeben. Ich kann dir deshalb keine verlässliche Frist nennen. Bitte prüfe den verlinkten Originalterminplan.",
+      "source_ids": ["winter"], "review_by": "2026-10-18", "kind": "gap"
+    },
+    {
+      "id": "summer-end", "title": "Semesterende · Sommersemester 2026", "scope": "Nur Sommersemester 2026", "keywords": ["sommersemester", "2026", "semesterende", "september"],
+      "text": "Das Sommersemester 2026 endet laut zentralem Terminplan am 30.09.2026. Die vorlesungsfreie Zeit ist dort vom 11.07.2026 bis 30.09.2026 angegeben.",
+      "source_ids": ["summer"], "review_by": "2026-09-30", "kind": "fact"
+    },
+    {
+      "id": "academic-advice", "title": "Studienfachberatung · Bachelor Informatik", "scope": "Bachelor Informatik, Kontaktstand 18.09.2026", "keywords": ["beratung", "studienfachberatung", "ansprechpartner", "meitner", "studienfragen"],
+      "text": "Für die Studienfachberatung im Bachelor Informatik nennt die Fakultät Prof. Dr. Matthias Meitner. E-Mail: matthias.meitner@th-nuernberg.de. Telefon: +49 911 5880-1688. Aktuelle Sprechzeiten bitte direkt erfragen.",
+      "source_ids": ["advice"], "review_by": "2026-12-18", "kind": "fact"
+    },
+    {
+      "id": "practice-advice", "title": "Ansprechperson für das Praxissemester", "scope": "Fakultät Informatik, Kontaktstand 18.09.2026", "keywords": ["praxissemester", "ansprechpartner", "bremer", "praktikumsbeauftragter"],
+      "text": "Für Fragen zum praktischen Semester nennt die Fakultät Informatik Prof. Dr. Wolfgang Bremer. E-Mail: wolfgang.bremer@th-nuernberg.de. Telefon: +49 911 5880-1285.",
+      "source_ids": ["advice"], "review_by": "2026-12-18", "kind": "fact"
+    },
+    {
+      "id": "study-office", "title": "Studienbüro für Informatik", "scope": "Bachelor und Master IN/MIN/WIN, Kontaktstand 18.09.2026", "keywords": ["studienbüro", "organisation", "bewerbung", "verwaltung"],
+      "text": "Für die Informatikstudiengänge nennt die Fakultätsseite das Studienbüro unter studienbuero-technik@th-nuernberg.de. Es ist eine Anlaufstelle für organisatorische Studienfragen. Angaben zur aktuellen Erreichbarkeit findest du auf der verlinkten Seite.",
+      "source_ids": ["office"], "review_by": "2026-12-18", "kind": "fact"
+    },
+    {
+      "id": "general-advice", "title": "Zentrale Studienberatung", "scope": "Allgemeine Studienberatung, Kontaktstand 18.09.2026", "keywords": ["zentral", "studienwahl", "orientierung", "studienberatung"],
+      "text": "Die Zentrale Studienberatung erreichst du unter studienberatung@th-nuernberg.de oder +49 911 5880-4500. Aktuelle Öffnungszeiten und Hinweise findest du auf der Kontaktseite der Hochschule.",
+      "source_ids": ["services"], "review_by": "2026-12-18", "kind": "fact"
+    },
+    {
+      "id": "it-support", "title": "IT-Hilfe an der Hochschule", "scope": "Zentrale IT, Kontaktstand 18.09.2026", "keywords": ["it", "passwort", "login", "wlan", "support", "hotline"],
+      "text": "Den IT Service Desk beziehungsweise die Hotline der Zentralen IT erreichst du unter rz-hotline@th-nuernberg.de und +49 911 5880-4848. Die Kontaktseite verlinkt die aktuellen Servicezeiten.",
+      "source_ids": ["services"], "review_by": "2026-12-18", "kind": "fact"
+    }
+  ]
+}

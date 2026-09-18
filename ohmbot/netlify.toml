@@ -1,0 +1,28 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["data/thn_knowledge.json"]
+
+[dev]
+  command = "node scripts/dev.mjs --static --port=3000"
+  targetPort = 3000
+  port = 8888
+  autoLaunch = false
+  framework = "#custom"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # frame-ancestors erlaubt iframe-Einbettung. Für den echten Betrieb
+    # auf 'self' und die konkrete Website-Domain beschränken.
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-src 'self'; frame-ancestors 'self' https: http://localhost:* http://127.0.0.1:*"

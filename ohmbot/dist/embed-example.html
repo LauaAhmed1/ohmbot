@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>OhmBot · Einbettungsbeispiel</title><link rel="stylesheet" href="embed-example.css"><script src="embed-example.js" defer></script></head>
+<body>
+  <main><p class="eyebrow">OHMBOT / INTEGRATION</p><h1>Ein Chat. Zwei Möglichkeiten.</h1><p>Dieses Beispiel zeigt OhmBot direkt im Seiteninhalt und als aufklappbares Widget unten rechts. Beide verwenden dieselbe Chat-Webseite.</p>
+  <h2>Direkt in der Webseite</h2>
+  <!-- Auf einer anderen Website src durch https://DEINE-SITE.netlify.app/?embed=1 ersetzen. -->
+  <iframe class="inline-chat" src="./?embed=1" title="OhmBot – Fragen zum Studium" loading="lazy" referrerpolicy="no-referrer"></iframe>
+  <p class="hint">Die beiden Chatansichten führen unabhängige Gespräche. Auf eurer späteren Website genügt eine der Varianten.</p></main>
+  <section id="widget-panel" class="widget-panel" aria-label="OhmBot Chatfenster" hidden><iframe id="widget-frame" data-src="./?embed=1" title="OhmBot – Chat-Widget" referrerpolicy="no-referrer"></iframe></section>
+  <button id="widget-toggle" class="widget-toggle" aria-expanded="false" aria-controls="widget-panel">OhmBot öffnen <span aria-hidden="true">↗</span></button>
+</body></html>
