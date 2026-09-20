@@ -6,12 +6,14 @@ const demo = process.argv.includes('--demo');
 const staticOnly = process.argv.includes('--static');
 const port = Number(process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] || 3000);
 // Die Demo-Auswahl wird nur in diesem lokalen Server injiziert, nie in Netlify.
-function demoSelector({ input, entries }) {
-  const question = input.message.toLocaleLowerCase('de');
-  const scored = entries.map((entry) => ({ entry, score: entry.keywords.reduce((sum, key) => sum + (question.includes(key) ? key.length : 0), 0) })).filter((row) => row.score > 0).sort((a, b) => b.score - a.score);
-  return { status: scored.length ? 'answered' : 'unknown', entry_ids: scored.slice(0, 1).map(({ entry }) => entry.id) };
+function demoResponder({ entries }) {
+  const entry = entries.find((e) => e.id !== 'regulations-scope');
+  return { status: entry ? 'answered' : 'clarification', lookup_query: '', paragraphs: [{
+    text: entry ? entry.text : 'Das ist die lokale Demo ohne KI. Freie Antworten sind erst mit dem API-Zugang verfügbar.',
+    kind: entry ? 'university' : 'clarification', entry_ids: entry ? [entry.id] : [],
+  }] };
 }
-const chat = createChatHandler(demo ? { selector: demoSelector, env: {} } : {});
+const chat = createChatHandler(demo ? { responder: demoResponder, env: {} } : {});
 const files = new Map([
   ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
   ['/style.css', ['style.css', 'text/css']], ['/script.js', ['script.js', 'text/javascript']],

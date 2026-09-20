@@ -1,262 +1,192 @@
-# OhmBot
+# OhmBot – Version 2
 
-Ein kleiner, quellenbasierter Studierenden-Chatbot für ein IT-Projekt an der **TH Nürnberg Georg Simon Ohm**. HTML, CSS und JavaScript im Browser, eine Netlify Function auf dem Server und die OpenAI Responses API. Kein Framework, keine Datenbank, kein RAG-System, keine notwendigen npm-Laufzeitpakete.
+Studierendenprojekt für die TH Nürnberg: einfache HTML/CSS/JavaScript-Webseite, Netlify Function und OpenAI. Kein Frontend-Framework, keine Vektordatenbank und keine npm-Laufzeitpakete. Recherchestand: **20.09.2026**.
 
-Die Gestaltung greift Rot, Weiß und eine klare Hochschul-Typografie auf. OhmBot ist sichtbar als **Studierendenprojekt** gekennzeichnet. Das Symbol ist ein eigenes Chat-Symbol, kein offizielles Hochschullogo.
+Das Update erweitert die Wissensbasis auf **518 Einträge aus 42 offiziellen Quellen**, darunter **414 Moduleinträge** für Bachelor und Master Informatik, Medieninformatik und Wirtschaftsinformatik. Gemeinsame Module werden je Studiengang separat geführt. Das ist ein umfangreicher, datierter Bestand, keine vollständige oder amtliche Hochschulauskunft.
 
-## 1. Schnellstart ohne API-Key
+## Was sich geändert hat
 
-Voraussetzung: **Node.js 24 oder neuer** mit npm. Prüfen mit `node --version`. Das Projekt vollständig entpacken und ein Terminal im Ordner `ohmbot` öffnen (dort liegt diese README).
+- Hochschulantworten werden passend zur Frage formuliert. Version 1 konnte nur fertige Texte auswählen.
+- Lokale Suche berücksichtigt Abkürzungen, einfache Tippfehler, Studiengang und Anschlussfragen. Sie sendet höchstens 18 passende Einträge statt der gesamten Datei an die KI.
+- Die KI darf bei fehlenden Treffern einmal mit anderen Suchbegriffen nachsuchen.
+- „Hallo“, „Danke“ und kurze Abschiede werden direkt ohne OpenAI beantwortet. Allgemeine Fragen bekommen allgemeine KI-Antworten mit entsprechender Kennzeichnung.
+- Hochschulregeln brauchen Quellenbelege. Fundstellen enthalten Abschnitt, Prüfdatum und gegebenenfalls PDF-Seite.
+- Fristen, Wiederholungen und ECTS werden nach Studiengang, Jahrgang und Dokumentfassung unterschieden. Gefundene Quellenkonflikte sind ausdrücklich erfasst.
+
+## 1. Das bestehende GitHub-/Netlify-Projekt aktualisieren
+
+**Nicht nur die Wissensdatei austauschen:** Neue Antwortlogik und Daten gehören zusammen.
+
+1. ZIP entpacken. Im darin enthaltenen Ordner `ohmbot` liegen `index.html`, `package.json`, `netlify.toml`, `lib/`, `data/` und `netlify/`.
+2. Im bestehenden GitHub-Repository den bisherigen Projektordner öffnen. Wenn dort bereits ein Unterordner `ohmbot` liegt, dessen **Inhalt** mit diesen Dateien ersetzen. Keinen zusätzlichen Ordner `ohmbot/ohmbot` erzeugen.
+3. Alle Projektdateien einschließlich `lib/retrieval.js`, `lib/answer.js`, `lib/chat-service.js`, `lib/knowledge.js` und `data/thn_knowledge.json` übernehmen. Ebenso Frontend, `scripts/`, `test/` und Konfiguration übernehmen. `.env` niemals hochladen. Im GitHub-Webeditor vor dem Commit die geänderten Dateipfade kontrollieren.
+4. Änderungen auf dem mit Netlify verbundenen Branch speichern/committen. Bei aktivem automatischem Deployment startet Netlify den neuen Build. Unter **Deploys** auf **Published** warten.
+5. Die aktuelle Seite `https://ohmbot.netlify.app` neu laden. „Hallo“ und danach „wie viele ects brauch ich fürs 2 studienabschnitt“ testen. Die zweite Frage soll 38 ECTS **aus dem ersten Studienabschnitt** mit Quellen nennen.
+
+Der bereits bei Netlify hinterlegte `OPENAI_API_KEY` bleibt dort. Für dieses Update ist kein neuer Schlüssel erforderlich. Wenn ein Schlüssel offengelegt wurde, diesen separat bei OpenAI widerrufen und ersetzen.
+
+Dieses Paket verändert die Live-Seite nicht von selbst. Erst das Übernehmen der Dateien und ein erfolgreicher Netlify-Build veröffentlichen das Update. Beim bestehenden Git-Deployment sind spätere reine Wissensänderungen ebenfalls erst **nach dem automatisch ausgelösten Deploy** live.
+
+## 2. Lokal ausprobieren
+
+Voraussetzung: **Node.js 24 oder neuer**. Terminal im entpackten Ordner `ohmbot` öffnen. Es ist kein `npm install` nötig.
 
 ```sh
 npm run demo
 ```
 
-Dann **http://localhost:3000** öffnen. Beenden mit `Strg+C` im Terminal.
+[Lokale Seite](http://localhost:3000) öffnen. Die gelb markierte Demo testet Suche, Darstellung und Quellen mit hinterlegten Texten; sie ist keine KI und beantwortet allgemeine Fragen nicht frei. Beenden mit Strg+C. Anderer Port: `npm run demo -- --port=3001`.
 
-Diese ausdrücklich gekennzeichnete **lokale Demo** wählt Wissenseinträge über Stichwörter aus. Sie dient zum Prüfen der Oberfläche, Quellenanzeige und Einbettung, ist keine KI und bewertet keine komplexen Anschlussfragen. Sie benötigt weder Schlüssel noch Internet und verursacht keine API-Kosten. Der Demo-Code ist nur im lokalen Entwicklungsserver; auf Netlify gibt es keinen automatischen Demo-Fallback.
+Mit echter KI:
 
-Einbettungsbeispiel: **http://localhost:3000/embed-example.html**.
+1. `.env.example` nach `.env` kopieren, etwa in PowerShell mit `Copy-Item .env.example .env`.
+2. `.env` im Editor öffnen und `OPENAI_API_KEY=DEIN_OPENAI_API_KEY` durch euren echten Schlüssel ersetzen. Schlüssel ausschließlich dort eintragen, nie im Browsercode.
+3. `OPENAI_MODEL=gpt-4.1-mini` beibehalten oder ein kompatibles Modell wählen.
+4. Demo beenden und `npm start` ausführen. [localhost:3000](http://localhost:3000) öffnen.
 
-## 2. Lokal mit OpenAI testen
+Die API-Nutzung benötigt ein freigeschaltetes API-Projekt mit Kontingent. Änderungen an `.env`, Backend oder Daten werden nach einem Serverneustart wirksam. Die HTML-Datei nicht per Doppelklick starten, da dann der Server fehlt.
 
-1. Einen API-Key im eigenen [OpenAI API-Projekt](https://platform.openai.com/api-keys) erstellen. Das Projekt muss API-Zugang und verfügbares Kontingent haben.
-2. `.env.example` im Projektordner nach `.env` kopieren:
-
-   **PowerShell / Windows:**
-
-   ```powershell
-   Copy-Item .env.example .env
-   ```
-
-   **macOS / Linux:**
-
-   ```sh
-   cp .env.example .env
-   ```
-
-3. `.env` in einem Texteditor öffnen und den Platzhalter ersetzen:
-
-   ```dotenv
-   OPENAI_API_KEY=DEIN_ECHTER_SCHLUESSEL
-   OPENAI_MODEL=gpt-4.1-mini
-   CHAT_DISABLED=false
-   ```
-
-4. Eine gegebenenfalls laufende Demo mit `Strg+C` beenden. Danach:
-
-   ```sh
-   npm start
-   ```
-
-5. **http://localhost:3000** öffnen. Jetzt werden Fragen tatsächlich durch OpenAI ausgewertet; der gelbe Demo-Hinweis verschwindet. Zum Beispiel: „Wie ist der Bachelor Informatik aufgebaut?“
-
-Der lokale Server führt dieselbe Chat-Logik wie die Netlify Function aus. Er ist nur an die lokale Loopback-Adresse gebunden. **Kein `npm install` erforderlich.** `.env` wird von Node beim Start geladen; nach Änderungen den Server neu starten. Die HTML-Datei nicht per Doppelklick öffnen: Dafür fehlt der API-Server.
-
-Schlüssel ausschließlich in `.env` beziehungsweise in Netlifys Umgebungsvariablen hinterlegen. `.env` ist von Git ausgeschlossen. Niemals Schlüssel in HTML, `script.js`, `netlify.toml`, Screenshots oder Chatnachrichten eintragen.
-
-### Technische Prüfungen
+## 3. Tests und Build
 
 ```sh
 npm test
 npm run build
 ```
 
-Die automatisierten Tests verwenden simulierte OpenAI-Antworten, benötigen keinen Key und kosten nichts. Der Build prüft die Wissensbasis und kopiert ausschließlich erlaubte Frontend-Dateien nach `dist/`. Der Ordner enthält **keinen API-Key, keine Serverdateien und keine Wissensdatei**.
+Die Offline-Tests prüfen Eingaben, Suchtreffer, Kontext, Quellenreferenzen, Kontingentfehler und API-Vertrag ohne echte KI-Kosten. Der Build validiert die JSON-Datei und kopiert ausschließlich sieben öffentliche Dateien nach `dist/`. API-Schlüssel, Wissensdatei und Servercode werden nicht als statische Dateien veröffentlicht.
 
-Für einen zusätzlichen lokalen Test mit Netlifys eigener Umgebung:
-
-```sh
-npm run dev:netlify
-```
-
-Dabei lädt `npx` die offizielle `netlify-cli` aus npm; beim ersten Mal ist Internet nötig. Vorher andere Server auf Port 3000 beenden. Öffne danach **http://localhost:8888**. Netlify Dev verarbeitet `/api/chat`; der Hilfsserver liefert nur die Webseite aus. Die Plattform-Ratenbegrenzung wird erst nach einem Netlify-Deploy wirksam und muss dort geprüft werden.
-
-## 3. Auf Netlify veröffentlichen
-
-### Empfohlen: Git-Repository verbinden
-
-1. Auf GitHub, GitLab oder Bitbucket ein Repository anlegen.
-2. Den **Inhalt des Ordners `ohmbot`** als Repository-Inhalt hochladen. `package.json` und `netlify.toml` müssen im Repository-Hauptverzeichnis liegen. Auch `.env.example` und `.gitignore` übernehmen, **aber niemals `.env`**. `dist/` muss nicht hochgeladen werden.
-3. Bei Netlify anmelden und **Add new project → Import an existing project** wählen. Git-Anbieter und Repository auswählen. Bezeichnungen können sich in der Oberfläche ändern.
-4. Build-Einstellungen kontrollieren:
-
-   | Einstellung | Wert |
-   |---|---|
-   | Base directory | leer, wenn OhmBot im Repository-Hauptverzeichnis liegt |
-   | Build command | `npm run build` |
-   | Publish directory | `dist` |
-   | Functions directory | `netlify/functions` (steht bereits in `netlify.toml`) |
-   | Node-Version | `24` (steht bereits in `netlify.toml`) |
-
-   Falls das Repository einen übergeordneten Ordner enthält, als Base directory stattdessen `ohmbot` auswählen.
-
-5. In **Project configuration → Environment variables** die Variablen anlegen:
-
-   | Name | Wert | Zweck |
-   |---|---|---|
-   | `OPENAI_API_KEY` | eigener API-Key | geheimer Serverzugang |
-   | `OPENAI_MODEL` | `gpt-4.1-mini` | austauschbares Modell |
-   | `CHAT_DISABLED` | `false` | bei `true` werden Anfragen pausiert |
-
-   Falls Netlify Scopes anbietet, muss **Functions** enthalten sein. Für den Livebetrieb den Production-Kontext wählen; für Deploy Previews bei Bedarf separat setzen. Den API-Key als Secret markieren, wenn diese Option verfügbar ist.
-
-6. **Deploy** starten. Wenn die Seite schon gebaut wurde: nach dem Eintragen/Ändern von Variablen einen neuen Deploy auslösen. Netlifys offizielle Hinweise zu [Function-Umgebungsvariablen](https://docs.netlify.com/build/functions/environment-variables/) erklären die Laufzeit-Verfügbarkeit.
-7. Im Deploy-Log kontrollieren, dass `chat` als Function verpackt wurde. Die Netlify-Adresse öffnen und mindestens eine Frage, eine unbekannte Frage und eine Quellenverknüpfung prüfen.
-8. Im Post-processing-Abschnitt des Deploy-Logs nach der bestätigten Ratenregel für **beide** Pfade `/api/chat` und `/.netlify/functions/chat` suchen. Netlify kann ungültige Ratenregeln melden, ohne den Deploy abzubrechen. Siehe [Rate limiting](https://docs.netlify.com/manage/security/secure-access-to-sites/rate-limiting/).
-
-**Nicht nur `dist` per Netlify Drop hochziehen.** Ein reiner statischer Upload stellt das Backend nicht bereit. Veröffentlicht werden müssen Frontend **und** Function über den Git-Build oder die CLI.
-
-### Alternative: Netlify CLI
-
-Im vollständigen Projektordner:
+Die Qualität echter KI-Formulierungen zusätzlich mit `testfragen.md` prüfen. Dafür gibt es einen **freiwilligen, kostenpflichtigen** Test:
 
 ```sh
-npx netlify-cli login
-npx netlify-cli init
+npm run eval:live
 ```
 
-Das gewünschte Netlify-Projekt auswählen oder anlegen. Den Schlüssel anschließend über die Netlify-Weboberfläche hinterlegen; so landet er nicht im Shell-Verlauf. Danach:
+Er nutzt die lokale `.env`, stellt zehn feste Fragen und kann durch Nachsuchen bis zu 20 API-Aufrufe auslösen. Der Bericht `evaluation-results.json` bleibt von Git ausgeschlossen. Stichwortchecks ersetzen keine fachliche Prüfung der Antworten. Dieser Test wurde bei der Erstellung ohne verfügbaren Projekt-Key nicht ausgeführt.
 
-```sh
-npx netlify-cli deploy --build --prod
-```
+Optional: `npm run dev:netlify` startet Netlify Dev auf [localhost:8888](http://localhost:8888). Dafür wird beim ersten Start die offizielle Netlify CLI aus npm benötigt. Der lokale Hilfsserver auf Port 3000 muss dafür frei sein. Plattform-Ratenlimits nach dem echten Deploy separat prüfen.
 
-Den erzeugten Deploy genauso prüfen wie oben. Git-basierte Folgeänderungen lassen sich später automatisch veröffentlichen.
+## 4. Netlify neu einrichten
 
-## 4. Architektur und Antwortprinzip
+Bei Netlify **Add new project → Import an existing project**, dann GitHub und das Repository wählen. Die Einstellungen aus `netlify.toml` werden verwendet:
+
+| Einstellung | Wenn Projekt im Repository-Hauptordner | Wenn Projekt im Unterordner `ohmbot` |
+|---|---|---|
+| Base directory | leer | `ohmbot` |
+| Package directory | leer | leer |
+| Build command | `npm run build` | `npm run build` |
+| Publish directory, relativ zur Base | `dist` | `dist` |
+| Functions directory, relativ zur Base | `netlify/functions` | `netlify/functions` |
+| Node-Version | `24` | `24` |
+
+Netlify kann den Base-Pfad als festen Präfix anzeigen, beispielsweise `ohmbot/dist`. Diesen angezeigten Präfix nicht noch einmal eintippen.
+
+In **Project configuration → Environment variables**:
+
+| Key (Variablenname) | Value (Inhalt) |
+|---|---|
+| `OPENAI_API_KEY` | euer geheimer API-Schlüssel |
+| `OPENAI_MODEL` | `gpt-4.1-mini` |
+| `CHAT_DISABLED` | `false` |
+
+Der Schlüssel gehört in **Value**, der Name `OPENAI_API_KEY` in **Key**. Der Production-Kontext und der Functions-Scope müssen abgedeckt sein. „All scopes“ deckt Functions ebenfalls ab. Wenn verfügbar, „Contains secret values“ aktivieren. Eine Umgebungsvariable wird nicht allein durch diese Checkbox vor dem Frontend geschützt: Entscheidend ist, dass ausschließlich die Serverfunktion sie liest und kein Build sie in öffentliche Dateien schreibt.
+
+Nach Variablenänderungen unter **Deploys → Trigger deploy → Deploy project** neu bauen. Das Deploy-Log muss die Function `chat` enthalten. Nur `dist` per Netlify Drop hochzuladen genügt nicht für den Chat-Server. Die Variante mit Git oder `npx netlify-cli deploy --build --prod` veröffentlicht auch Functions.
+
+## 5. Architektur
 
 ```text
-Browser: index.html + style.css + script.js
-  │ POST /api/chat  { message, history }
-  ▼
-netlify/functions/chat.js
-  └─ lib/chat-service.js
-      ├─ Eingabe/Origin prüfen, Größe begrenzen
-      ├─ lib/knowledge.js → data/thn_knowledge.json
-      ├─ nur noch frische Wissenseinträge auswählen
-      ├─ OpenAI Responses API → Status + maximal 4 Eintrags-IDs
-      └─ geprüfte Texte + serverseitig zugeordnete Quellen ausgeben
+Browser → POST /api/chat → Netlify Function
+  → Eingaben, Origin und Not-Aus prüfen
+  → reine Begrüßung? direkt lokal beantworten
+  → gültige JSON-Einträge lokal suchen (max. 18 / 26.000 Zeichen)
+  → OpenAI formuliert Antwort mit Eintrags-IDs
+  → optional einmal mit präziseren Suchbegriffen nachsuchen
+  → IDs prüfen und offizielle Quellenlinks serverseitig zuordnen
+  → Text und Quellen im Browser anzeigen
 ```
 
-Die KI formuliert in Version 1 **keine neuen Hochschulfakten**. Sie erkennt die Frage und wählt passende Wissenseinträge. Der Server übernimmt ausschließlich die redaktionell hinterlegten Texte und zugehörigen TH-Links. Freitext, erfundene URLs und unbekannte IDs aus einer Modellantwort werden nicht übernommen. Das ist bewusst etwas weniger flexibel als ein frei formulierender Chatbot, bietet aber einen einfachen, nachvollziehbaren Ausgangspunkt.
+Das ist eine einfache Suche mit Wissenskontext, ohne Embeddings oder Vektordatenbank. `lib/retrieval.js` ist der spätere Austauschpunkt für eine leistungsfähigere Suchschicht.
 
-Die Auswahl kann trotzdem falsch liegen, etwa bei mehrdeutigen Fragen. Eine Quellenangabe ist kein Beweis, dass ein Eintrag zur persönlichen Situation passt. Deshalb nennen die Texte Studiengang, Semester und Quellenstand; unbekannte Angaben werden als Lücke behandelt. Ein Modellwechsel muss mit `testfragen.md` geprüft werden.
+| Datei | Aufgabe |
+|---|---|
+| `index.html`, `style.css`, `script.js` | Oberfläche, Verlauf und Quellenanzeige |
+| `netlify/functions/chat.js` | öffentlich erreichbare Serverfunktion und Ratenregel |
+| `lib/chat-service.js` | Anfrageprüfung, KI-Aufruf, Antwort- und Quellenprüfung |
+| `lib/retrieval.js` | lokale Suche, Abkürzungen und Gesprächskontext |
+| `lib/answer.js` | Antwortanweisungen, JSON-Schema und Begrüßungen |
+| `lib/knowledge.js` | Wissensdatei laden und validieren, Aktualität prüfen |
+| `data/thn_knowledge.json` | redaktionell gepflegter Wissensbestand |
+| `WISSENSBASIS.md`, `MODULKATALOG.md` | Abdeckung, Konflikte und prüfbarer Modulindex |
+| `scripts/`, `test/` | Entwicklung, Build und Prüfungen |
 
-- Der Browser merkt sich den sichtbaren Verlauf nur im Tab-Arbeitsspeicher. Neuladen oder „Neuer Chat“ löscht ihn.
-- Für Anschlussfragen gehen höchstens sechs vorherige Nachrichten und die neue Frage an den Server und an OpenAI.
-- OpenAI erhält die aktive, kleine Wissensbasis als Kontext. Es gibt keinen Webzugriff, keinen automatischen Abruf der Quellen und keine Vektordatenbank.
-- Die API-Anfrage verwendet `store: false`. Das ist keine Zusage einer vollständigen Löschung aller Anbieterdaten oder von Infrastruktur-Logs.
-- Die Anwendung selbst speichert keine Chats auf dem Server und protokolliert keine Frageinhalte. Netlify/OpenAI können eigene Betriebsdaten verarbeiten. Vor einem offiziellen Hochschulbetrieb sind passende Betreiber-/Datenschutzhinweise und die institutionelle Freigabe zu ergänzen.
-- Keine externen Schriften, Analyse-Skripte, Cookies oder Browser-Speicher für Chatverläufe.
+Anders als Version 1 erzeugt Version 2 eigene Formulierungen. **Gültige Quellen-IDs beweisen nicht automatisch, dass jede Aussage korrekt aus der Quelle abgeleitet wurde.** Die Anweisungen begrenzen Hochschulantworten auf Belege; Fehler bleiben möglich. Die Benutzeroberfläche macht das sichtbar. Eine echte fachliche Abnahme ist vor breitem Einsatz erforderlich.
 
-### Projektdateien
+## 6. Wissen manuell erweitern
 
-```text
-ohmbot/
-├── index.html, style.css, script.js, favicon.svg
-├── netlify.toml
-├── netlify/functions/chat.js        # Netlify-Einstieg + Plattformlimit
-├── lib/chat-service.js              # Validierung, API, sichere Antwortausgabe
-├── lib/knowledge.js                 # Laden, Prüfen, Aktualität
-├── data/thn_knowledge.json          # redaktionelle Inhalte und Quellen
-├── scripts/build.mjs                # nur öffentliche Dateien nach dist
-├── scripts/dev.mjs                  # lokaler Server + sichtbare Demo
-├── test/chat.test.js                # automatisierte Tests, kein API-Zugriff
-├── embed-example.html/.css/.js      # iframe und aufklappbares Widget
-├── package.json
-├── .env.example, .gitignore
-├── README.md, testfragen.md
-└── dist/                           # automatisch erzeugt
+`data/thn_knowledge.json` enthält `sources` und `entries`. Eine Quelle benötigt `id`, `title`, einen offiziellen TH-HTTPS-Link und `checked_at`. Ein Eintrag zum Beispiel:
+
+```json
+{
+  "id": "mein-neues-thema",
+  "title": "Präzise Bezeichnung des Themas",
+  "scope": "Bachelor Informatik, Studienbeginn ab WS 2021/22",
+  "programs": ["b-in"],
+  "category": "rule",
+  "keywords": ["Suchbegriff", "gängige Abkürzung"],
+  "text": "Hier ausschließlich selbst geprüfte Inhalte der genannten Quelle eintragen.",
+  "kind": "fact",
+  "source_ids": ["spo-in"],
+  "references": [{"source_id": "spo-in", "locator": "Tatsächlich geprüfter Paragraph", "page": 3}],
+  "review_by": "2026-12-31"
+}
 ```
 
-## 5. Wissen pflegen und erweitern
+Das Beispiel zeigt das Format, keinen fertigen Wissensinhalt. Studiengänge: `b-in`, `b-min`, `b-win`, `m-in`, `m-min`, `m-win`. Allgemeine Hochschulinfos können `programs: []` verwenden. `kind: "gap"` bezeichnet dokumentierte Lücken oder Konflikte. `page` ist die **PDF-Seitennummer**, die von der gedruckten Seitenzahl abweichen kann.
 
-Die Startbasis umfasst 17 Einträge mit sieben offiziellen Quellen, geprüft am **18.09.2026**: Hochschulname, Informatik-Studienaufbau, Praxissemester, ausgewählte Semestertermine und Prüfungsfristen sowie Anlaufstellen. SPO, Studienplan und Modulhandbuch sind als **Dokumentenwegweiser** enthalten, nicht als vollständig ausgewertete Regelwerke.
+Vorgehen: Originalquelle lesen → Geltung prüfen → kurze Fakten mit Fundstelle erfassen → sinnvolle Suchbegriffe ergänzen → Tests/Build → echte Fragen ausprobieren → GitHub-Commit. Ein bloßer Link macht dessen gesamten Inhalt nicht automatisch verfügbar.
 
-Bei der Bachelorarbeit ist bewusst eine Wissenslücke hinterlegt: Die Informatik-Studiengangsseite enthielt im entsprechenden Abschnitt einen Verweis auf Medieninformatik. Bearbeitungsfristen oder Zulassungsvoraussetzungen wurden daraus nicht ungeprüft übernommen. Ebenso werden unbekannte Rückmeldefristen nicht geschätzt.
+`keywords` werden in Version 2 auch im Livebetrieb für die Suche genutzt. `review_by` ist eine redaktionelle Wiedervorlage, keine Hochschulfrist: abgelaufene Einträge werden ausgeschlossen. Nach Quellenprüfung aktualisieren, nie nur blind das Datum verlängern. Keine automatische Internetrecherche im laufenden Chat. Maximal 3.000 Zeichen pro Eintrag und 2 Millionen Zeichen in der Gesamtdatei; der Suchkontext ist unabhängig davon begrenzt.
 
-In `data/thn_knowledge.json`:
+## 7. Kosten und Betrieb
 
-- `sources`: eindeutige ID, Titel, offizieller HTTPS-Link, `checked_at` (tatsächliches Prüfdatum).
-- `entries`: eindeutige ID, Titel, `scope` (Geltungsbereich), kurze vollständige Antwort in `text`, `source_ids`, `review_by`, `kind` (`fact` oder `gap`).
-- `keywords`: nur für die lokale Demo. Die KI versteht die Texte ohne Stichwortsuche.
-- `review_by`: redaktionelle Wiedervorlage, **keine amtliche Gültigkeit oder Frist**. Nach diesem Datum wird der Eintrag automatisch ausgeschlossen. Es gibt keinen automatischen Aktualisierungsdienst. Abgelaufene Inhalte nach Sichtprüfung aktualisieren und neu deployen; niemals bloß das Datum weiterstellen.
+Standardmodell ist `gpt-4.1-mini`. Es lässt sich per `OPENAI_MODEL` ändern; das Ersatzmodell muss Responses API und das verwendete strukturierte Ausgabeformat unterstützen.
 
-Vorgehen für neue Inhalte:
+Eine normale Frage verursacht einen API-Aufruf, bei einer Nachsuche höchstens zwei. Reine Begrüßungen benötigen keinen. Die API berechnet die verarbeitete Textmenge: Anweisungen, passende Wissenseinträge, Frage, bis zu sechs Verlaufsnachrichten und Antwort. Jede Antwort ist auf 1.600 Ausgabetokens begrenzt. Allgemeine Fragen kosten ebenfalls API-Nutzung. Netlify kann eigene Hosting-/Funktionskosten haben.
 
-1. Offizielle Quelle öffnen und Datum, Studiengang sowie geltende SPO-Fassung prüfen.
-2. Quelle eintragen oder vorhandene Quellen-ID wiederverwenden.
-3. Einen kurzen Wissenseintrag ergänzen. Zahlen und Fristen immer mit Semester beziehungsweise Jahr nennen. `scope` ergänzt die Auswahl, ersetzt aber keine sichtbare Einordnung im Antworttext.
-4. Bei Fristen eine nahe Wiedervorlage wählen. Regeln für unterschiedliche Studienanfänger-Jahrgänge getrennt erfassen.
-5. `npm test` und `npm run build` ausführen; danach die zugehörigen Fragen aus `testfragen.md` mit echtem Modell prüfen.
-6. Änderungen im Vier-Augen-Prinzip freigeben und neu veröffentlichen.
+Das API-Guthaben ist vom ChatGPT-Abo getrennt. Über [API-Nutzung](https://platform.openai.com/usage) den tatsächlichen Verbrauch beobachten. Die konfigurierte Netlify-Ratenregel ist 12 Anfragen pro Minute und IP/Domain; sie ist kein globales Kostenlimit. Gemeinsame Hochschulnetze können eine IP teilen. Der Origin-Check ist kein Login und hält direkte Skriptanfragen nicht auf. `CHAT_DISABLED=true` plus neuer Deploy pausiert den Chat.
 
-Die JSON-Datei verwendet ISO-Daten (`YYYY-MM-DD`) und darf keine Kommentare enthalten. Der Build lehnt fehlende Quellen, doppelte IDs, nicht offizielle Links, zu lange Einträge und eine über 80.000 Zeichen gewachsene Gesamtdatei ab. Damit wächst die API-Eingabe nicht unbemerkt unbegrenzt.
-
-**Späteres RAG:** `getActiveKnowledge()` ist der Austauschpunkt für eine Suchschicht. Sie kann später passende Abschnitte aus PDFs oder einer Such-/Vektordatenbank liefern. Quellen-IDs, Geltungsbereich, Aktualität, Antwortprüfung und die Frontend-Schnittstelle beibehalten. Dafür ist jetzt kein Architekturwechsel im Browser nötig.
-
-## 6. Kosten und Betrieb
-
-Standard ist [GPT-4.1 mini](https://developers.openai.com/api/docs/models/gpt-4.1-mini), ein kleines Modell mit Unterstützung für strukturierte Ausgaben. Wechsel über `OPENAI_MODEL`; das Ersatzmodell muss Responses API und das verwendete JSON-Schema unterstützen. Ein Account kann andere Modellfreigaben haben.
-
-Pro Frage gibt es genau einen API-Aufruf, keine automatischen kostenpflichtigen Wiederholungen, höchstens 350 Ausgabetokens, maximal 1500 Zeichen pro Nachricht und einen kurzen Verlauf. Der Netlify-Endpunkt begrenzt Anfragen pro IP und Domain auf 12 pro Minute. Mehrere Studierende im selben Hochschulnetz können dieselbe öffentliche IP teilen; die Grenze bei Bedarf bewusst anpassen.
-
-**Ratenbegrenzung ist kein globales Kostenlimit und keine Anmeldung.** Der Origin-Check verhindert gewöhnliche fremde Browseraufrufe, aber keine direkten Anfragen aus Skripten. Projektverbrauch bei OpenAI und Netlify beobachten und Benachrichtigungen/Budgets konfigurieren; Alarmgrenzen nicht ungeprüft als harte Ausgabensperren betrachten. Für den späteren breiten Betrieb kann eine Anmeldung oder Bot-Schutz ergänzt werden. `CHAT_DISABLED=true` und ein neuer Deploy pausieren die Anwendung; bei einem kompromittierten Schlüssel diesen bei OpenAI widerrufen.
-
-## 7. Einbetten in eine andere Website
-
-Die API bleibt auf der OhmBot-Domain. Das eingebettete Dokument ruft sie unter seiner eigenen Origin auf; dafür sind **keine offenen CORS-Freigaben** nötig.
-
-### Variante A: iframe im Seiteninhalt
+## 8. Einbettung als iframe oder Chat-Widget
 
 ```html
-<iframe
-  src="https://DEINE-SITE.netlify.app/?embed=1"
-  title="OhmBot – Fragen zum Studium an der TH Nürnberg"
-  width="100%"
-  height="720"
-  loading="lazy"
-  referrerpolicy="no-referrer">
-</iframe>
+<iframe src="https://ohmbot.netlify.app/?embed=1"
+  title="OhmBot" width="100%" height="720"
+  loading="lazy" referrerpolicy="no-referrer"></iframe>
 ```
 
-`DEINE-SITE` durch eure echte Netlify-Domain ersetzen. `?embed=1` blendet die Seitenleiste aus und passt die Ansicht an kleine Einbettungen an. Höhe und Rahmen können im CSS der Gast-Website geändert werden. Das iframe benötigt JavaScript; kein `sandbox` ohne die dafür nötigen Freigaben setzen.
+`?embed=1` blendet die Seitenleiste aus. `embed-example.html`, `embed-example.css` und `embed-example.js` zeigen außerdem ein aufklappbares Widget unten rechts. Die Widget-Elemente und Dateien in die Gastseite übernehmen; dort beim iframe `data-src="./?embed=1"` durch die vollständige OhmBot-Adresse ersetzen. Das iframe lädt erst beim ersten Öffnen.
 
-### Variante B: aufklappbares Chat-Widget
+Die API bleibt auf der OhmBot-Domain, offene CORS-Freigaben sind nicht nötig. Die Content-Security-Policy in `netlify.toml` erlaubt zunächst HTTPS-Gastseiten. Für eine feste Integration `frame-ancestors` auf die konkret erlaubten Domains begrenzen. Die Gastseite muss die OhmBot-Domain in ihrem `frame-src` erlauben.
 
-`embed-example.html` enthält ein funktionierendes Beispiel mit Schaltfläche unten rechts, verzögert geladenem iframe und auf-/zuklappbarem Panel. Zur Integration die Widget-Elemente, die zugehörigen `.widget-*`-CSS-Regeln und `embed-example.js` in die Gast-Website übernehmen. Im `data-src` des Widget-iframes `./?embed=1` durch eure vollständige Netlify-URL ersetzen. Für die direkt eingebettete Variante zusätzlich das normale `src` anpassen. Bei einer fremden Host-Website die CSS-/JS-Dateien dort mit ausliefern.
+## 9. Häufige Fehler
 
-Netlifys `Content-Security-Policy` erlaubt im Prototyp Einbettung durch HTTPS-Seiten und lokale Testseiten. Für die spätere Hochschule im Wert `frame-ancestors` nur `'self'` und die **genauen** erlaubten Website-Origins eintragen, beispielsweise:
-
-```text
-frame-ancestors 'self' https://www.th-nuernberg.de
-```
-
-Auch die Gast-Website muss eure Netlify-Domain in ihrem eigenen `frame-src` erlauben. Kein zusätzliches `X-Frame-Options: DENY` oder `SAMEORIGIN` setzen, wenn fremde Origins einbetten sollen.
-
-## 8. Fehler finden
-
-| Symptom | Prüfen |
+| Meldung/Symptom | Nächster Schritt |
 |---|---|
-| „noch nicht eingerichtet“ | `.env` lokal oder Netlify-Variable setzen; Server neu starten/neuen Deploy auslösen |
-| „nicht korrekt freigeschaltet“ | API-Key, Berechtigungen und OpenAI-Projekt kontrollieren |
-| KI-Dienst ausgelastet/Kontingent erschöpft | OpenAI-Kontingent und Projektverbrauch prüfen; keine Endlosschleife starten |
-| 404 unter `/api/chat` | vollständiges Projekt inklusive Function deployen; nicht nur statische Dateien hochladen |
-| Zu viele Anfragen | eine Minute warten; Netlify-Ratenregel und gemeinsam genutzte IP beachten |
-| Nur noch unbekannte Antworten | `review_by` prüfen; Wissen nach Quellenprüfung aktualisieren |
-| Nach neuem Schlüssel weiter Fehler | neuer Deploy; korrekter Functions-Scope und Deploy-Kontext |
-| iframe leer/blockiert | `frame-ancestors` bei OhmBot und `frame-src` auf der Gast-Website prüfen |
-| Lokal Port belegt | alten Server mit `Strg+C` beenden oder `npm start -- --port=3001` verwenden |
+| 404 auf der Startseite | Base-/Publish-Verzeichnis und `dist/index.html` im Build prüfen |
+| 404 bei `/api/chat` | vollständiges Projekt mit Function deployen |
+| Noch nicht eingerichtet | Variablenname/Wert bei Netlify prüfen und neu deployen |
+| Nicht korrekt freigeschaltet | Schlüssel, Rechte und zugehöriges API-Projekt prüfen |
+| API-Guthaben/Nutzungslimit reicht nicht | API-Abrechnung und Projektkontingent prüfen |
+| Zu viele Anfragen | kurz warten; API-/Netlify-Ratenlimit prüfen |
+| Wissen vorhanden, trotzdem keine passende Antwort | Suchbegriffe, Studiengang, `review_by` und echte Antwort mit `testfragen.md` prüfen |
+| Nur alte Antworten | GitHub-Dateien, letzten erfolgreichen Deploy und Browser-Neuladen kontrollieren |
+| iframe blockiert | Sicherheitsrichtlinien von Gastseite und OhmBot prüfen |
 
-Die App gibt keine internen Anbieterfehler oder Schlüssel an den Browser zurück. Beim Debuggen nur Statuscodes und anonymisierte technische Daten protokollieren.
+Anbieterfehler und Schlüssel werden nicht an den Browser gespiegelt. Der Verlauf bleibt im Speicher des Tabs. `store:false` wird an OpenAI gesetzt; dies ist keine Zusage über sämtliche anbieterseitigen Aufbewahrungsregeln.
 
-## 9. Zusammenarbeit zu fünft
+## 10. Zusammenarbeit und Prüfumfang
 
-Mögliche Aufteilung: (1) Oberfläche/Barrierefreiheit, (2) Backend/API, (3) Wissensredaktion, (4) Tests/Qualität, (5) Netlify/Integration/Dokumentation. Kleine Änderungen über Pull Requests teilen; Inhaltsänderungen insbesondere bei Fristen und Prüfungsregeln von einer zweiten Person prüfen lassen. Keine gemeinsamen Schlüssel in Git oder Messenger versenden.
+Für fünf Personen bieten sich Oberfläche, Backend, Wissensredaktion, Tests und Betrieb als Arbeitsbereiche an. Prüfungsregeln und Fristen im Vier-Augen-Prinzip abnehmen. Testfragen bei jeder Wissensänderung mitpflegen.
 
-## 10. Prüfstand dieser Lieferung
+Prüfstand der Lieferung: 34 Offline-Tests bestanden, lokaler Build erfolgreich und Netlify-Offline-Build einschließlich Verpackung der Function erfolgreich. Desktop-, Smartphone- und Widget-Darstellung wurden lokal geprüft; alle 42 Quellenlinks waren erreichbar. Die lokale Demo prüft die Darstellung und Suche, nicht die Qualität echter Modellantworten. Ein realer Modelltest und die Veröffentlichung wurden nicht ausgeführt. Fachliche Abdeckung und bekannte Lücken stehen in `WISSENSBASIS.md`.
 
-23 automatisierte Tests und der statische Build wurden lokal erfolgreich ausgeführt. Auch `npx netlify-cli build --offline` mit vollständiger Function-Verpackung war erfolgreich. Zusätzlich wurden Desktop-/Mobilansicht, Schnellfragen, Quellenanzeige, neuer Chat, API-Fehlermeldung und das iframe-/Widget-Beispiel im Browser geprüft. Echte OpenAI-Aufrufe und ein Live-Deploy benötigen euren API-Key beziehungsweise euren Netlify-Zugang und sind nicht Teil der kostenfreien Offline-Prüfung. Die fachliche Modell-Auswahl mit dem eigenen Key anhand von `testfragen.md` abnehmen.
-
-Technische Referenzen: [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [Netlify Functions](https://docs.netlify.com/build/functions/overview/), [Function-Konfiguration](https://docs.netlify.com/build/functions/configuration/). Hochschulquellen sind direkt in der Wissensdatei dokumentiert und erscheinen an den jeweiligen Antworten.
+Technische Referenzen: [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [Netlify Functions](https://docs.netlify.com/build/functions/overview/), [Function-Umgebungsvariablen](https://docs.netlify.com/build/functions/environment-variables/).

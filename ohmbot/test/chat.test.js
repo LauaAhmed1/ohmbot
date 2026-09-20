@@ -7,13 +7,16 @@ import { config } from '../netlify/functions/chat.js';
 const now = () => new Date('2026-09-18T12:00:00Z');
 const active = getActiveKnowledge('2026-09-18');
 const env = { OPENAI_API_KEY: 'test-secret-not-a-real-key' };
-function request(body = { message: 'Wie ist Informatik aufgebaut?' }, options = {}) {
+function request(body = { message: 'Wie viele ECTS für den zweiten Studienabschnitt?' }, options = {}) {
   return new Request('https://ohmbot.example/api/chat', { method: 'POST', headers: { 'Content-Type': 'application/json', Origin: 'https://ohmbot.example', ...options.headers }, body: typeof body === 'string' ? body : JSON.stringify(body) });
 }
 function provider(selection, overrides = {}) {
   return Response.json({ status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text: JSON.stringify(selection) }] }], ...overrides });
 }
 function setup(fetchImpl) { return createChatHandler({ env, now, fetchImpl }); }
+function answer(text, ids = ['second-section'], kind = 'university', status = 'answered') {
+  return { status, paragraphs: [{ text, kind, entry_ids: ids }], lookup_query: '' };
+}
 
 test('Wissensbasis hat nur offizielle Quellen und gültige Referenzen', () => {
   assert.equal(validateKnowledge(knowledge), true);
@@ -43,7 +46,7 @@ test('Echte API-Vertragsform: Modell, store=false, begrenzte Ausgabe und JSON-Sc
     assert.equal(url, 'https://api.openai.com/v1/responses');
     assert.equal(options.headers.Authorization, `Bearer ${env.OPENAI_API_KEY}`);
     payload = JSON.parse(options.body);
-    return provider({ status: 'answered', entry_ids: ['structure'] });
+    return provider(answer('Du brauchst mindestens 38 ECTS aus dem ersten Studienabschnitt.'));
   });
   const response = await handler(request());
   const body = await response.json();
@@ -51,10 +54,12 @@ test('Echte API-Vertragsform: Modell, store=false, begrenzte Ausgabe und JSON-Sc
   assert.equal(response.headers.get('cache-control'), 'no-store');
   assert.equal(payload.model, 'gpt-4.1-mini');
   assert.equal(payload.store, false);
-  assert.equal(payload.max_output_tokens, 350);
+  assert.equal(payload.max_output_tokens, 1600);
   assert.equal(payload.text.format.strict, true);
-  assert.equal(body.blocks[0].text, knowledge.entries.find((entry) => entry.id === 'structure').text);
-  assert.equal(body.sources[0].id, 'structure');
+  assert.equal(body.blocks[0].text, 'Du brauchst mindestens 38 ECTS aus dem ersten Studienabschnitt.');
+  assert.equal(body.sources[0].id, 'spo-in');
+  assert.ok(body.sources[0].url.endsWith('#page=3'));
+  assert.ok(payload.instructions.length < 31000);
   assert.ok(!JSON.stringify(body).includes(env.OPENAI_API_KEY));
 });
 test('Ungültige Methode, Origin, JSON und zu lange Eingaben erreichen die API nicht', async (t) => {
@@ -99,25 +104,26 @@ test('Anbieterfehler, Timeout und kaputte Ausgabe werden abgefangen', async () =
     assert.ok(!(await response.text()).includes('secret-provider-detail'));
   }
 });
-test('Nur hinterlegte Texte: modellgenerierte Fakten und Links werden nie übernommen', () => {
-  const answer = composeAnswer({ status: 'answered', entry_ids: ['practice'], answer: 'Praxis dauert 2 Wochen', sources: ['https://evil.example'] }, active);
-  assert.equal(answer.blocks[0].text, knowledge.entries.find((entry) => entry.id === 'practice').text);
-  assert.ok(!JSON.stringify(answer).includes('evil.example'));
-  assert.ok(!JSON.stringify(answer).includes('dauert 2 Wochen'));
+test('Quellen-Links werden ausschließlich aus hinterlegten IDs gebildet', () => {
+  const output = composeAnswer({ ...answer('Mindestens 38 ECTS aus Abschnitt 1.'), sources: ['https://evil.example'] }, active);
+  assert.equal(output.blocks[0].text, 'Mindestens 38 ECTS aus Abschnitt 1.');
+  assert.deepEqual(output.blocks[0].citations, [1, 2, 3]);
+  assert.ok(!JSON.stringify(output).includes('evil.example'));
 });
 test('Erfundene, abgelaufene oder zu viele IDs führen zu unbekannt', () => {
-  for (const ids of [['imaginary'], ['practice', 'imaginary'], ['a', 'b', 'c', 'd', 'e']]) {
-    const answer = composeAnswer({ status: 'answered', entry_ids: ids }, active);
-    assert.equal(answer.message, UNKNOWN);
-    assert.deepEqual(answer.sources, []);
+  for (const ids of [['imaginary'], ['second-section', 'imaginary'], Array(7).fill('second-section')]) {
+    const output = composeAnswer(answer('Ungültige Belege', ids), active);
+    assert.equal(output.message, UNKNOWN);
+    assert.deepEqual(output.sources, []);
   }
-  assert.equal(composeAnswer({ status: 'answered', entry_ids: ['summer-end'] }, getActiveKnowledge('2026-10-01')).status, 'unknown');
+  assert.equal(composeAnswer(answer('Abgelaufen', ['summer-end']), getActiveKnowledge('2026-10-01')).status, 'unknown');
 });
 test('Teilantworten, Lücken und leere Treffer sind ausdrücklich gekennzeichnet', () => {
-  assert.equal(composeAnswer({ status: 'answered', entry_ids: ['thesis'] }, active).status, 'partial');
-  assert.equal(composeAnswer({ status: 'partial', entry_ids: ['spo'] }, active).status, 'partial');
-  assert.equal(composeAnswer({ status: 'unknown', entry_ids: ['spo'] }, active).status, 'unknown');
-  assert.equal(composeAnswer({ status: 'answered', entry_ids: [] }, active).status, 'unknown');
+  assert.equal(composeAnswer(answer('Nur dieser Teil ist belegt.', ['second-section'], 'university', 'partial'), active).status, 'partial');
+  assert.equal(composeAnswer(answer('Welchen Studiengang meinst du?', [], 'clarification', 'clarification'), active).status, 'clarification');
+  assert.equal(composeAnswer(answer('Hochschulfakt ohne Beleg', []), active).status, 'unknown');
+  assert.equal(composeAnswer(answer('Allgemeines Wissen', [], 'general'), active).sources.length, 0);
+  assert.equal(composeAnswer(answer('TH-Regel als Allgemeinwissen', [], 'general'), active, knowledge, { universityQuestion: true }).status, 'unknown');
 });
 test('Bei vollständig veralteter Basis kein kostenpflichtiger API-Aufruf', async () => {
   const handler = createChatHandler({ env, now: () => new Date('2028-01-01'), fetchImpl: () => { throw new Error('API-Aufruf verboten'); } });

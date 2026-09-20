@@ -48,21 +48,22 @@ function addMessage(role, text) {
 function renderAnswer(data) {
   const article = addMessage('assistant', data.message);
   for (const block of data.blocks) {
-    article.append(element('h2', '', block.title));
+    if (block.title) article.append(element('h2', '', block.title));
     article.append(element('p', '', block.text));
+    if (block.citations?.length) article.append(element('small', 'paragraph-citations', `Belege: ${block.citations.map((n) => `[${n}]`).join(' ')}`));
   }
   if (data.notice) article.append(element('p', 'answer-notice', data.notice));
   if (data.sources.length) {
     const sources = element('div', 'sources');
     sources.append(element('span', 'sources-label', 'QUELLEN · TH NÜRNBERG'));
-    for (const source of data.sources) {
+    for (const [index, source] of data.sources.entries()) {
       const url = new URL(source.url);
       if (url.protocol !== 'https:' || !(url.hostname === 'th-nuernberg.de' || url.hostname.endsWith('.th-nuernberg.de'))) continue;
-      const link = element('a', 'source-link', `${source.title} ↗`);
+      const link = element('a', 'source-link', `[${index + 1}] ${source.title} ↗`);
       link.href = url.href;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
-      link.append(element('small', '', `Geprüft am ${source.checked_at.split('-').reverse().join('.')}`));
+      link.append(element('small', '', `${source.locator ? `${source.locator} · ` : ''}Geprüft am ${source.checked_at.split('-').reverse().join('.')}`));
       sources.append(link);
     }
     article.append(sources);
@@ -85,7 +86,7 @@ async function sendQuestion(text, retry = false) {
   const currentGeneration = generation;
   const requestController = new AbortController();
   controller = requestController;
-  const timeout = setTimeout(() => requestController.abort(), 30000);
+  const timeout = setTimeout(() => requestController.abort(), 55000);
   try {
     const response = await fetch('/api/chat', {
       method: 'POST',

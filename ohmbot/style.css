@@ -10,3 +10,4 @@ body.embed .topbar{height:65px;padding:0 20px}body.embed .sidebar,body.embed .pr
 @media(max-width:360px){h1{font-size:32px}.quick-questions{grid-template-columns:1fr}.quick-questions button{min-height:80px}.card-number{margin-bottom:5px}}
 .mobile-reset{display:none;border:1px solid var(--line);border-radius:5px;background:white;color:var(--ink);padding:8px 10px;font-size:11px;white-space:nowrap}body.embed .mobile-reset{display:block}@media(max-width:760px){.mobile-reset{display:block;margin-left:auto}.university-link{display:none}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+.paragraph-citations{display:block;margin:-5px 0 16px;color:#5f7065;font-size:11px}

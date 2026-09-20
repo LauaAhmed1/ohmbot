@@ -24,7 +24,7 @@
         <button class="new-chat" id="new-chat" type="button"><span aria-hidden="true">＋</span> Neuer Chat</button>
         <div class="sidebar-section">
           <p class="sidebar-label">WOBEI ICH HELFEN KANN</p>
-          <button class="topic" data-question="Wie ist der Bachelor Informatik aufgebaut?"><span aria-hidden="true">01</span> Bachelor Informatik <span aria-hidden="true">↗</span></button>
+          <button class="topic" data-question="Was unterscheidet Informatik, Medieninformatik und Wirtschaftsinformatik?"><span aria-hidden="true">01</span> Unsere Studiengänge <span aria-hidden="true">↗</span></button>
           <button class="topic" data-question="Wann ist die Prüfungsanmeldung im Wintersemester 2026/27?"><span aria-hidden="true">02</span> Prüfungen & Termine <span aria-hidden="true">↗</span></button>
           <button class="topic" data-question="Was muss ich zum Praxissemester in Informatik wissen?"><span aria-hidden="true">03</span> Praxissemester <span aria-hidden="true">↗</span></button>
           <button class="topic" data-question="Wo finde ich SPO, Studienplan und Modulhandbuch für Informatik?"><span aria-hidden="true">04</span> Studiendokumente <span aria-hidden="true">↗</span></button>
@@ -36,20 +36,20 @@
           <a href="https://www.th-nuernberg.de/studium-karriere/wichtiges-zum-studienstart/termine-im-ueberblick/wintersemester/" target="_blank" rel="noopener noreferrer">Semestertermine <span aria-hidden="true">↗</span></a>
         </div>
       </div>
-      <div class="source-note"><span class="source-icon" aria-hidden="true">↗</span><strong>Wissen mit Quellen.</strong><p>Meine Antworten basieren auf ausgewählten Hochschulinformationen. Die verlinkten Originalquellen helfen dir weiter.</p><small>Ein IT-Projekt an der TH Nürnberg.<br>Kein offizielles Auskunftsangebot.</small></div>
+      <div class="source-note"><span class="source-icon" aria-hidden="true">↗</span><strong>Wissen mit Quellen.</strong><p>Hochschulauskünfte mit Fundstellen. Allgemeine Fragen beantworte ich mit KI-Wissen. Frag gern nach und beachte den Stand der Quellen.</p><small>Ein IT-Projekt an der TH Nürnberg.<br>Kein offizielles Auskunftsangebot.</small></div>
     </aside>
     <main class="main-panel" id="main">
-      <div class="chat-topline"><span><span class="status-dot" aria-hidden="true"></span> Orientierung für dein Studium</span><span class="focus-label">FOKUS INFORMATIK B. SC.</span></div>
+      <div class="chat-topline"><span><span class="status-dot" aria-hidden="true"></span> Orientierung für dein Studium</span><span class="focus-label">FAKULTÄT INFORMATIK · BACHELOR & MASTER</span></div>
       <p class="demo-banner" id="demo-banner" hidden>Lokale Demo ohne KI: Antworten werden zum Testen über Stichwörter ausgewählt. Es werden keine Daten an OpenAI gesendet.</p>
       <section class="chat-scroll" id="chat-scroll" aria-label="Chat mit OhmBot">
         <div class="welcome" id="welcome">
           <div class="eyebrow">FRAGEN GEHÖREN ZUM STUDIUM.</div>
           <h1>Dein Studium.<br>Deine Fragen. <span>OhmBot.</span></h1>
-          <p class="welcome-text">Hallo, ich bin OhmBot. Wie kann ich dir bei Fragen rund um dein Studium an der TH Nürnberg helfen?</p>
+          <p class="welcome-text">Hallo, ich bin OhmBot. Wie kann ich dir bei Fragen rund um dein Studium an der TH Nürnberg helfen? Auch andere Fragen sind willkommen.</p>
           <div class="quick-questions" aria-label="Beispielfragen">
-            <button data-question="Wie ist der Bachelor Informatik aufgebaut?"><span class="card-number">01 / STUDIUM</span><strong>Wie ist mein Studium aufgebaut?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
+            <button data-question="Wie viele ECTS brauche ich für den zweiten Studienabschnitt?"><span class="card-number">01 / STUDIUM</span><strong>Wie viele ECTS brauche ich zum Weiterkommen?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
             <button data-question="Was muss ich zum Praxissemester in Informatik wissen?"><span class="card-number">02 / PRAXIS</span><strong>Was erwartet mich im Praxissemester?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
-            <button data-question="Wo finde ich das Modulhandbuch für Informatik?"><span class="card-number">03 / DOKUMENTE</span><strong>Wo finde ich das Modulhandbuch?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
+            <button data-question="Was unterscheidet Informatik, Medieninformatik und Wirtschaftsinformatik?"><span class="card-number">03 / STUDIENGÄNGE</span><strong>Informatik, Medieninformatik oder Winfo?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
             <button data-question="Wer berät mich zum Bachelor Informatik?"><span class="card-number">04 / BERATUNG</span><strong>Wer hilft mir bei Studienfragen?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
           </div>
         </div>
@@ -57,14 +57,14 @@
       </section>
       <div class="composer-area">
         <div class="error-box" id="error-box" role="alert" hidden><p id="error-text"></p><button id="retry" type="button">Erneut versuchen</button></div>
-        <div class="loading" id="loading" role="status" hidden><span class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></span> OhmBot sucht in den Hochschulinformationen …</div>
+        <div class="loading" id="loading" role="status" hidden><span class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></span> OhmBot bearbeitet deine Frage …</div>
         <form id="chat-form" class="composer">
           <label for="question" class="sr-only">Deine Frage an OhmBot</label>
-          <textarea id="question" name="question" placeholder="Deine Frage zum Studium …" rows="1" maxlength="1500" required aria-describedby="input-help privacy-note"></textarea>
+          <textarea id="question" name="question" placeholder="Frag OhmBot …" rows="1" maxlength="1500" required aria-describedby="input-help privacy-note"></textarea>
           <button class="send-button" id="send" type="submit" aria-label="Frage senden"><span class="send-label">Senden</span><span aria-hidden="true">↑</span></button>
         </form>
         <div class="input-meta"><span id="input-help">Enter zum Senden · Shift + Enter für eine neue Zeile</span><span id="char-count">0 / 1500</span></div>
-        <p class="privacy-note" id="privacy-note">Bitte keine persönlichen Daten eingeben. Frage und letzter Gesprächskontext werden zur Antwortauswahl an OpenAI übermittelt. Der Verlauf bleibt nur in diesem Tab.</p>
+        <p class="privacy-note" id="privacy-note">Bitte keine persönlichen Daten eingeben. Für KI-Antworten werden Frage, letzter Gesprächskontext und passende Wissenseinträge an OpenAI übermittelt. Der Verlauf bleibt nur in diesem Tab.</p>
         <p class="mobile-project-note">Studierendenprojekt · Kein offizielles Auskunftsangebot der TH Nürnberg.</p>
       </div>
     </main>

@@ -1,6 +1,6 @@
 {
   "name": "ohmbot",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "description": "Quellenbasierter Studierenden-Chatbot für ein IT-Projekt an der TH Nürnberg",
@@ -10,6 +10,7 @@
     "demo": "node scripts/dev.mjs --demo",
     "build": "node scripts/build.mjs",
     "test": "node --test",
+    "eval:live": "node --env-file-if-exists=.env scripts/eval-live.mjs",
     "dev:netlify": "npx netlify-cli dev"
   }
 }
