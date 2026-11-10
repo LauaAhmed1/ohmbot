@@ -1,10 +1,26 @@
-# OhmBot – Version 2
+# OhmBot – Version 2.1.0
 
 Studierendenprojekt für die TH Nürnberg: einfache HTML/CSS/JavaScript-Webseite, Netlify Function und OpenAI. Kein Frontend-Framework, keine Vektordatenbank und keine npm-Laufzeitpakete. Recherchestand: **20.09.2026**.
 
 Das Update erweitert die Wissensbasis auf **518 Einträge aus 42 offiziellen Quellen**, darunter **414 Moduleinträge** für Bachelor und Master Informatik, Medieninformatik und Wirtschaftsinformatik. Gemeinsame Module werden je Studiengang separat geführt. Das ist ein umfangreicher, datierter Bestand, keine vollständige oder amtliche Hochschulauskunft.
 
 ## Was sich geändert hat
+
+### Neu in 2.1.0: automatischer Basis-Modus
+
+- Mit funktionierendem OpenAI-Zugang bleibt die KI-Antwort unverändert.
+- Fehlt der Schlüssel, ist er ungültig, das Guthaben erschöpft oder der KI-Dienst nicht erreichbar, liefert der Server gespeicherte Informationen mit Quellen. Auch Zeitüberschreitungen und unlesbare Anbieterantworten werden abgefangen.
+- „Basis-Modus“ kennzeichnet jede solche Antwort. Angezeigt werden bis zu drei passende vollständige Einträge einschließlich Geltungsbereich, bei Regeln zusätzlich die Einordnung der Prüfungsordnungen. Es wird keine individuelle Zulassungsentscheidung getroffen.
+- Die Suche berücksichtigt Themenwörter, Abkürzungen, einfache Tippfehler, explizite Studiengänge und Jahre. Dokumentierte Konflikte bleiben sichtbar. Unpassende oder abgelaufene Einträge werden nicht als Antwort ausgegeben. Die Textsuche ist keine semantische Garantie; mehrdeutige oder nicht erkannte Fragen können eine Präzisierung benötigen.
+- Allgemeine Aufgaben können ohne KI nicht frei beantwortet werden. Bei fehlenden Treffern gibt es einen verständlichen Hinweis statt erfundener Inhalte.
+- Bei der nächsten Anfrage wird ein vorhandener Key wieder verwendet. Es gibt keine dauerhafte Sperre nach einem Fehler und keine zusätzlichen Wiederholungen kostenpflichtiger Aufrufe durch den Fallback.
+- `CHAT_DISABLED=true`, Eingabeprüfung und Netlify-Ratenlimit bleiben wirksam. Eine ausdrückliche Ablehnung durch die KI wird nicht mit einem Fallback umgangen.
+
+**Basis-Modus bedeutet nicht Internet-offline:** Webseite und Netlify Function müssen erreichbar sein. Er überbrückt einen Ausfall des KI-Anbieters, keinen Netlify-Ausfall oder eine unterbrochene Internetverbindung. Bei einem Timeout kann die Umschaltung erst nach dem laufenden Anfrageversuch erfolgen (22 Sekunden pro KI-Aufruf, maximal zwei Aufrufe bei Nachsuche).
+
+Die Wissensdaten wurden für dieses Update nicht neu recherchiert oder künstlich verlängert. Ihr Quellenstand bleibt 20.09.2026. Änderungen an der Wissensbasis wirken auch im Basis-Modus nach dem nächsten Deploy.
+
+### Bereits in Version 2.0
 
 - Hochschulantworten werden passend zur Frage formuliert. Version 1 konnte nur fertige Texte auswählen.
 - Lokale Suche berücksichtigt Abkürzungen, einfache Tippfehler, Studiengang und Anschlussfragen. Sie sendet höchstens 18 passende Einträge statt der gesamten Datei an die KI.
@@ -19,7 +35,7 @@ Das Update erweitert die Wissensbasis auf **518 Einträge aus 42 offiziellen Que
 
 1. ZIP entpacken. Im darin enthaltenen Ordner `ohmbot` liegen `index.html`, `package.json`, `netlify.toml`, `lib/`, `data/` und `netlify/`.
 2. Im bestehenden GitHub-Repository den bisherigen Projektordner öffnen. Wenn dort bereits ein Unterordner `ohmbot` liegt, dessen **Inhalt** mit diesen Dateien ersetzen. Keinen zusätzlichen Ordner `ohmbot/ohmbot` erzeugen.
-3. Alle Projektdateien einschließlich `lib/retrieval.js`, `lib/answer.js`, `lib/chat-service.js`, `lib/knowledge.js` und `data/thn_knowledge.json` übernehmen. Ebenso Frontend, `scripts/`, `test/` und Konfiguration übernehmen. `.env` niemals hochladen. Im GitHub-Webeditor vor dem Commit die geänderten Dateipfade kontrollieren.
+3. Alle Projektdateien einschließlich der **neuen Datei `lib/offline-answer.js`**, `lib/retrieval.js`, `lib/answer.js`, `lib/chat-service.js`, `lib/knowledge.js` und `data/thn_knowledge.json` übernehmen. Ebenso Frontend, `scripts/`, `test/` und Konfiguration übernehmen. `.env` niemals hochladen. Im GitHub-Webeditor vor dem Commit die geänderten Dateipfade kontrollieren.
 4. Änderungen auf dem mit Netlify verbundenen Branch speichern/committen. Bei aktivem automatischem Deployment startet Netlify den neuen Build. Unter **Deploys** auf **Published** warten.
 5. Die aktuelle Seite `https://ohmbot.netlify.app` neu laden. „Hallo“ und danach „wie viele ects brauch ich fürs 2 studienabschnitt“ testen. Die zweite Frage soll 38 ECTS **aus dem ersten Studienabschnitt** mit Quellen nennen.
 
@@ -35,7 +51,7 @@ Voraussetzung: **Node.js 24 oder neuer**. Terminal im entpackten Ordner `ohmbot`
 npm run demo
 ```
 
-[Lokale Seite](http://localhost:3000) öffnen. Die gelb markierte Demo testet Suche, Darstellung und Quellen mit hinterlegten Texten; sie ist keine KI und beantwortet allgemeine Fragen nicht frei. Beenden mit Strg+C. Anderer Port: `npm run demo -- --port=3001`.
+[Lokale Seite](http://localhost:3000) öffnen. Die gelb markierte Demo verwendet jetzt genau den produktiven Basis-Modus mit hinterlegten Texten; sie lädt keinen Key und ruft OpenAI nicht auf. Beenden mit Strg+C. Anderer Port: `npm run demo -- --port=3001`.
 
 Mit echter KI:
 
@@ -112,6 +128,7 @@ Das ist eine einfache Suche mit Wissenskontext, ohne Embeddings oder Vektordaten
 | `index.html`, `style.css`, `script.js` | Oberfläche, Verlauf und Quellenanzeige |
 | `netlify/functions/chat.js` | öffentlich erreichbare Serverfunktion und Ratenregel |
 | `lib/chat-service.js` | Anfrageprüfung, KI-Aufruf, Antwort- und Quellenprüfung |
+| `lib/offline-answer.js` | Auswahl gespeicherter Texte bei fehlendem KI-Zugang |
 | `lib/retrieval.js` | lokale Suche, Abkürzungen und Gesprächskontext |
 | `lib/answer.js` | Antwortanweisungen, JSON-Schema und Begrüßungen |
 | `lib/knowledge.js` | Wissensdatei laden und validieren, Aktualität prüfen |
@@ -173,10 +190,9 @@ Die API bleibt auf der OhmBot-Domain, offene CORS-Freigaben sind nicht nötig. D
 |---|---|
 | 404 auf der Startseite | Base-/Publish-Verzeichnis und `dist/index.html` im Build prüfen |
 | 404 bei `/api/chat` | vollständiges Projekt mit Function deployen |
-| Noch nicht eingerichtet | Variablenname/Wert bei Netlify prüfen und neu deployen |
-| Nicht korrekt freigeschaltet | Schlüssel, Rechte und zugehöriges API-Projekt prüfen |
-| API-Guthaben/Nutzungslimit reicht nicht | API-Abrechnung und Projektkontingent prüfen |
-| Zu viele Anfragen | kurz warten; API-/Netlify-Ratenlimit prüfen |
+| Basis-Modus trotz gewünschter KI | Variablenname/Wert, Schlüsselrechte, Modellzugang und API-Guthaben prüfen; nach Variablenänderung neu deployen |
+| Basis-Modus nur vorübergehend | Anbieter möglicherweise gestört oder begrenzt; nächste Frage versucht wieder die KI |
+| Zu viele Anfragen | kurz warten; Netlify-Ratenlimit gilt auch im Basis-Modus |
 | Wissen vorhanden, trotzdem keine passende Antwort | Suchbegriffe, Studiengang, `review_by` und echte Antwort mit `testfragen.md` prüfen |
 | Nur alte Antworten | GitHub-Dateien, letzten erfolgreichen Deploy und Browser-Neuladen kontrollieren |
 | iframe blockiert | Sicherheitsrichtlinien von Gastseite und OhmBot prüfen |
@@ -187,6 +203,6 @@ Anbieterfehler und Schlüssel werden nicht an den Browser gespiegelt. Der Verlau
 
 Für fünf Personen bieten sich Oberfläche, Backend, Wissensredaktion, Tests und Betrieb als Arbeitsbereiche an. Prüfungsregeln und Fristen im Vier-Augen-Prinzip abnehmen. Testfragen bei jeder Wissensänderung mitpflegen.
 
-Prüfstand der Lieferung: 34 Offline-Tests bestanden, lokaler Build erfolgreich und Netlify-Offline-Build einschließlich Verpackung der Function erfolgreich. Desktop-, Smartphone- und Widget-Darstellung wurden lokal geprüft; alle 42 Quellenlinks waren erreichbar. Die lokale Demo prüft die Darstellung und Suche, nicht die Qualität echter Modellantworten. Ein realer Modelltest und die Veröffentlichung wurden nicht ausgeführt. Fachliche Abdeckung und bekannte Lücken stehen in `WISSENSBASIS.md`.
+Prüfstand 2.1.0: 45 automatische Tests ohne echte API-Aufrufe bestanden. Sie prüfen unter anderem fehlenden Key, Anbieterfehler, Guthabenfehler, Timeout, Rückkehr zur KI, Quellen, Aktualität und Not-Aus. Die Anbieterantworten werden in diesen Tests simuliert; ein echter OpenAI-Aufruf und die Veröffentlichung gehören nicht zu dieser Lieferung. Fachliche Abdeckung und bekannte Lücken stehen in `WISSENSBASIS.md`.
 
 Technische Referenzen: [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [Netlify Functions](https://docs.netlify.com/build/functions/overview/), [Function-Umgebungsvariablen](https://docs.netlify.com/build/functions/environment-variables/).

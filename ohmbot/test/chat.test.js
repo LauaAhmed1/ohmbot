@@ -82,26 +82,31 @@ test('Ungültige Methode, Origin, JSON und zu lange Eingaben erreichen die API n
   }
   assert.equal(calls, 0);
 });
-test('Fehlender Schlüssel und Not-Aus geben sichere Fehler zurück', async () => {
-  for (const config of [{}, { OPENAI_API_KEY: 'DEIN_OPENAI_API_KEY' }, { ...env, CHAT_DISABLED: 'true' }]) {
+test('Not-Aus bleibt auch ohne Schlüssel wirksam', async () => {
+  for (const config of [{ CHAT_DISABLED: 'true' }, { ...env, CHAT_DISABLED: 'true' }]) {
     const response = await createChatHandler({ env: config, now })(request());
     assert.equal(response.status, 503);
     assert.ok(!JSON.stringify(await response.json()).includes(env.OPENAI_API_KEY));
   }
 });
-test('Anbieterfehler, Timeout und kaputte Ausgabe werden abgefangen', async () => {
-  for (const [fetchImpl, status] of [
-    [async () => new Response('secret-provider-detail', { status: 401 }), 503],
-    [async () => new Response('secret-provider-detail', { status: 429 }), 503],
-    [async () => new Response('secret-provider-detail', { status: 500 }), 502],
-    [async () => { throw new DOMException('secret-provider-detail', 'TimeoutError'); }, 504],
-    [async () => { throw new TypeError('secret-provider-detail'); }, 502],
-    [async () => provider(null, { status: 'incomplete' }), 502],
-    [async () => new Response('{kaputt'), 502],
+test('Anbieterfehler, Timeout und kaputte Ausgabe liefern gespeicherte Informationen', async () => {
+  for (const fetchImpl of [
+    async () => new Response('secret-provider-detail', { status: 401 }),
+    async () => new Response('secret-provider-detail', { status: 403 }),
+    async () => new Response('secret-provider-detail', { status: 429 }),
+    async () => new Response('secret-provider-detail', { status: 500 }),
+    async () => { throw new DOMException('secret-provider-detail', 'TimeoutError'); },
+    async () => { throw new TypeError('secret-provider-detail'); },
+    async () => Response.json({ status: 'incomplete', output: [] }),
+    async () => new Response('{kaputt'),
   ]) {
     const response = await setup(fetchImpl)(request());
-    assert.equal(response.status, status);
-    assert.ok(!(await response.text()).includes('secret-provider-detail'));
+    assert.equal(response.status, 200);
+    const data = await response.json();
+    assert.equal(data.mode, 'basis');
+    assert.match(data.blocks[0].text, /38 ECTS/);
+    assert.ok(data.sources.length);
+    assert.ok(!JSON.stringify(data).includes('secret-provider-detail'));
   }
 });
 test('Quellen-Links werden ausschließlich aus hinterlegten IDs gebildet', () => {

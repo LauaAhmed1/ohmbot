@@ -5,15 +5,8 @@ import { createChatHandler } from '../lib/chat-service.js';
 const demo = process.argv.includes('--demo');
 const staticOnly = process.argv.includes('--static');
 const port = Number(process.argv.find((arg) => arg.startsWith('--port='))?.split('=')[1] || 3000);
-// Die Demo-Auswahl wird nur in diesem lokalen Server injiziert, nie in Netlify.
-function demoResponder({ entries }) {
-  const entry = entries.find((e) => e.id !== 'regulations-scope');
-  return { status: entry ? 'answered' : 'clarification', lookup_query: '', paragraphs: [{
-    text: entry ? entry.text : 'Das ist die lokale Demo ohne KI. Freie Antworten sind erst mit dem API-Zugang verfügbar.',
-    kind: entry ? 'university' : 'clarification', entry_ids: entry ? [entry.id] : [],
-  }] };
-}
-const chat = createChatHandler(demo ? { responder: demoResponder, env: {} } : {});
+// Demo verwendet exakt den produktiven Basis-Modus, ohne lokale Schlüssel zu lesen.
+const chat = createChatHandler(demo ? { env: {} } : {});
 const files = new Map([
   ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
   ['/style.css', ['style.css', 'text/css']], ['/script.js', ['script.js', 'text/javascript']],

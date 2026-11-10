@@ -83,9 +83,12 @@ test('Eine alternative Suche ist erlaubt, keine unendliche API-Schleife', async 
   const looping=createChatHandler({env:{},now,responder:()=>{calls++;return {status:'lookup',lookup_query:'ECTS',paragraphs:[]};}});
   assert.equal((await (await looping(request('Welche ECTS-Grenze?'))).json()).status,'unknown');assert.equal(calls,2);
 });
-test('Quotenfehler unterscheiden Guthaben von kurzfristiger Ratenbegrenzung',async()=>{
-  for(const [code,expected] of [['insufficient_quota',/API-Guthaben/],['rate_limit_exceeded',/viele Anfragen/]]){
+test('Quotenfehler liefern bei allgemeinen Fragen einen klaren Basis-Hinweis',async()=>{
+  for(const code of ['insufficient_quota','credit_balance_exhausted','rate_limit_exceeded']){
     const handler=createChatHandler({now,env:{OPENAI_API_KEY:'test'},fetchImpl:async()=>Response.json({error:{code}},{status:429})});
-    assert.match((await (await handler(request('Was ist ein Baum?'))).json()).error,expected);
+    const data = await (await handler(request('Wie koche ich eine Suppe?'))).json();
+    assert.equal(data.mode,'basis');
+    assert.deepEqual(data.sources,[]);
+    assert.match(data.blocks[0].text,/Allgemeine Aufgaben/);
   }
 });

@@ -1,6 +1,7 @@
 import { knowledge, getActiveKnowledge, berlinDate } from './knowledge.js';
 import { retrieveKnowledge, normalize } from './retrieval.js';
 import { INSTRUCTIONS, answerSchema, smallTalk } from './answer.js';
+import { offlineSelection } from './offline-answer.js';
 
 export const UNKNOWN = 'Dazu habe ich in der bereitgestellten Wissensbasis keine verlässliche Information gefunden. Bitte präzisiere gegebenenfalls Studiengang und Semester oder wende dich an die Studienberatung.';
 const MAX_BODY_BYTES = 18000;
@@ -114,15 +115,29 @@ export function createChatHandler({ env = process.env, fetchImpl = fetch, now = 
       if (greeting) return json({ status: 'answered', message: greeting, blocks: [], sources: [], notice: '' });
       const today = berlinDate(now());
       const active = getActiveKnowledge(today);
+      const basis = () => {
+        const output = composeAnswer(offlineSelection(input, active), active);
+        return json({ ...output, mode: 'basis',
+          message: output.blocks.length && output.status === 'partial' ? 'Hier sind passende gespeicherte Informationen. Sie beantworten möglicherweise nur einen Teil deiner Frage.' : output.message,
+          notice: 'Basis-Modus · KI-Antworten sind derzeit nicht verfügbar. Angezeigt werden gespeicherte Texte, keine individuell erzeugte Antwort. Beachte Studiengang, Jahrgang und Quellenstand.' });
+      };
+      if (!responder && (!env.OPENAI_API_KEY?.trim() || env.OPENAI_API_KEY === 'DEIN_OPENAI_API_KEY')) return basis();
       if (!active.length && isUniversityQuestion(input)) return json(composeAnswer(null, []));
-      if (!responder && (!env.OPENAI_API_KEY || env.OPENAI_API_KEY === 'DEIN_OPENAI_API_KEY')) return json({ error: 'OhmBot ist noch nicht eingerichtet. Das Projektteam muss den API-Zugang hinterlegen.' }, 503);
       const respond = responder || answerWithOpenAI;
       let entries = retrieveKnowledge(input, active);
-      let result = await respond({ input, entries, today, env, fetchImpl });
-      // Genau eine Nachsuche, damit schwierige Fragen nicht sofort als unbekannt enden.
-      if (result?.status === 'lookup' && typeof result.lookup_query === 'string' && result.lookup_query.trim() && result.lookup_query.length <= 300) {
-        entries = retrieveKnowledge({ message: result.lookup_query, history: [...input.history, { role: 'user', content: input.message }] }, active);
-        result = await respond({ input: { ...input, second_search: true }, entries, today, env, fetchImpl });
+      let result;
+      try {
+        result = await respond({ input, entries, today, env, fetchImpl });
+        // Genau eine Nachsuche, damit schwierige Fragen nicht sofort als unbekannt enden.
+        if (result?.status === 'lookup' && typeof result.lookup_query === 'string' && result.lookup_query.trim() && result.lookup_query.length <= 300) {
+          entries = retrieveKnowledge({ message: result.lookup_query, history: [...input.history, { role: 'user', content: input.message }] }, active);
+          result = await respond({ input: { ...input, second_search: true }, entries, today, env, fetchImpl });
+        }
+      } catch {
+        // Nur Fehler im Anbieteraufruf lösen den Fallback aus. Eingabeprüfung,
+        // Origin-Schutz und Not-Aus bleiben außerhalb dieses Blocks wirksam.
+        // Keine Anbietertexte oder Schlüssel an Besucher weiterreichen.
+        return basis();
       }
       return json(composeAnswer(result, entries, knowledge, { universityQuestion: isUniversityQuestion(input) }));
     } catch (error) {

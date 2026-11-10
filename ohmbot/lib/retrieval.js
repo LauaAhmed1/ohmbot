@@ -29,6 +29,10 @@ const aliases = [
   [/\b(studienbeginn|studienstart|anfaengt|beginnt|los)\b/g, 'studienbeginn semesterbeginn'],
 ];
 function expand(s) { let n = normalize(s); for (const [rx, replacement] of aliases) n = n.replace(rx, replacement); return n; }
+export function searchTerms(s) { return words(expand(s)); }
+export function matchesTerm(a, b) {
+  return a === b || (Math.min(a.length, b.length) >= 5 && (a.startsWith(b) || b.startsWith(a))) || near(a, b);
+}
 
 export function detectPrograms(message) {
   const s = expand(message);
@@ -53,7 +57,8 @@ function near(a, b) {
   }
   return edits + (i < a.length || j < b.length ? 1 : 0) <= 1;
 }
-export function retrieveKnowledge(input, entries, { maxEntries = 18, maxChars = 26000 } = {}) {
+// Rangliste separat nutzbar; die KI-Auswahl darunter bleibt unverändert.
+export function rankKnowledge(input, entries) {
   const current = expand(input.message);
   const previousQuestions = (input.history || []).filter((h) => h.role === 'user').slice(-2).map((h) => h.content).join(' ');
   const query = words(current);
@@ -80,6 +85,11 @@ export function retrieveKnowledge(input, entries, { maxEntries = 18, maxChars = 
     if (semester && entry.id.startsWith('semester-') && entry.id.endsWith(`-${semester[1]}`)) score *= 2;
     return { entry, score };
   }).filter((row) => row.score > 0).sort((a, b) => b.score - a.score || a.entry.id.localeCompare(b.entry.id));
+  return scored;
+}
+
+export function retrieveKnowledge(input, entries, { maxEntries = 18, maxChars = 26000 } = {}) {
+  const scored = rankKnowledge(input, entries);
   const result = [];
   let size = 0;
   // Grundlagen zur Geltung verhindern die Vermischung von ASPO/APO und Jahrgängen.
