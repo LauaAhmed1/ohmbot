@@ -28,6 +28,10 @@ Wenn OpenAI nicht verfügbar ist, wechselt OhmBot automatisch in den Basis-Modus
 
 Der vollständige Quellcode und die technische Dokumentation befinden sich im Ordner [`ohmbot`](./ohmbot).
 
+## Mitwirkende
+
+- [@mahzuii](https://github.com/mahzuii) – Pull Request für [OhmBot v2.1.0](https://github.com/LauaAhmed1/ohmbot/pull/1)
+
 ## Hinweis
 
 OhmBot ist ein studentisches IT-Projekt und kein offizielles Auskunftsangebot der TH Nürnberg. Verbindlich sind ausschließlich die offiziellen Hochschuldokumente und Auskünfte der zuständigen Stellen.
