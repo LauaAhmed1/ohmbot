@@ -30,7 +30,11 @@ Der vollständige Quellcode und die technische Dokumentation befinden sich im Or
 
 ## Mitwirkende
 
-- [@mahzuii](https://github.com/mahzuii) – Pull Request für [OhmBot v2.1.0](https://github.com/LauaAhmed1/ohmbot/pull/1)
+- Ahmad Laua
+- Aru Cagdas
+- Nicevic Semiha
+- Saron Simge
+- Taskin Selin
 
 ## Hinweis
 
