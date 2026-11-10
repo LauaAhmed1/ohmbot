@@ -30,7 +30,7 @@ Der vollständige Quellcode und die technische Dokumentation befinden sich im Or
 
 ## Mitwirkende
 
-- Ahmad Laua
+- Ahmed Laua
 - Aru Cagdas
 - Nicevic Semiha
 - Saron Simge
