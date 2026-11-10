@@ -47,6 +47,7 @@ function addMessage(role, text) {
 }
 function renderAnswer(data) {
   const article = addMessage('assistant', data.message);
+  if (data.mode === 'basis') article.querySelector('.message-header').append(element('span', 'answer-notice', 'Basis-Modus'));
   for (const block of data.blocks) {
     if (block.title) article.append(element('h2', '', block.title));
     article.append(element('p', '', block.text));

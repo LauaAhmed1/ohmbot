@@ -61,8 +61,25 @@ Bei jeder Frage auf Studiengang/Jahrgang, Zahlen, Bedingungen und Quellen achten
 - Neuer Chat setzt Verlauf zurück; laufende Antwort darf nicht im neuen Chat auftauchen.
 - Während einer Antwort sind doppelte Sendungen gesperrt. Enter sendet, Shift+Enter erzeugt Zeilenumbruch.
 - Quellen öffnen passende offizielle Seite; PDF-Link springt nach Möglichkeit zur genannten Seite.
-- Fehlender API-Key, ungültiger Key, erschöpftes Guthaben, Ratenlimit und Timeout zeigen verständliche Meldungen. Erneut versuchen erzeugt keine doppelte Nutzernachricht.
+- Fehlender API-Key, ungültiger Key, erschöpftes Guthaben, Anbieter-Ratenlimit und Timeout liefern gespeicherte Informationen mit Quellen und der Kennzeichnung „Basis-Modus“. Allgemeine Aufgaben bekommen einen Hinweis. Das Netlify-Ratenlimit bleibt eine Fehlermeldung.
 - iframe und aufklappbares Widget funktionieren nach Austausch der Domain.
 - `/data/thn_knowledge.json`, `/.env` und `/lib/chat-service.js` dürfen nicht als öffentliche Dateien ausgeliefert werden.
 
 Fachliche Fehler zuerst dem richtigen Bereich zuordnen: fehlender/fehlerhafter Eintrag, unpassende Suche, falsche KI-Ableitung oder veralteter Deploy. Nur am Prompt zu drehen behebt keine falschen Quelldaten.
+
+## Abnahme Basis-Modus (2.1.0)
+
+Mit `npm run demo` ohne Schlüssel und ohne Kosten ausprobieren:
+
+| Frage / Fall | Erwartung |
+|---|---|
+| wie viele ects brauch ich fürs 2 studienabschnitt | Gespeicherte 38-ECTS-Regel, Geltungsbereich, Quellen und Ordnungs-Kontext |
+| Darf ich mit 38 ECTS ins Praxissemester? | Gespeicherte Praxis-Zulassungsregel; keine individuelle Ja/Nein-Entscheidung |
+| Wie viele ECTS hat Statistik in Medieninformatik? | Dokumentierter Konflikt 5/6 ECTS bleibt sichtbar |
+| Was ist Winfo? | Gespeicherter Überblick Wirtschaftsinformatik |
+| Welche Module im vierten Semester Medieninformatik? | Passender Semesterplan mit Geltungsbereich |
+| Wie viel Gehalt bekomme ich im Praxissemester? | Keine erfundene Gehaltsangabe |
+| Schreibe mir ein Gedicht | Hinweis: allgemeine Aufgaben brauchen KI |
+| Hallo / Danke | Direkte Begrüßung wie bisher |
+
+`npm test` simuliert die Ausfälle und eine danach wieder erfolgreiche KI-Anfrage ohne echten Key. Für einen echten KI-Test `npm start` mit gültigem Key benutzen; dies verursacht normale API-Nutzung. `CHAT_DISABLED=true` soll weiterhin jede Antwort einschließlich Begrüßungen sperren. Kein Key auf GitHub oder in Screenshots veröffentlichen.
