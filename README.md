@@ -18,11 +18,11 @@ OhmBot ist ein studentischer Chatbot für Fragen rund um das Studium an der Tech
 
 ## Aktuelle Version
 
-**OhmBot v2.0.0**
+**OhmBot v2.1.0**
 
-Die aktuelle Version enthält eine deutlich erweiterte Wissensbasis und eine verbesserte Erkennung frei formulierter Fragen.
+Wenn OpenAI nicht verfügbar ist, wechselt OhmBot automatisch in den Basis-Modus und zeigt passende Informationen aus der Wissensbasis mit Quellen an. Das Update verbessert außerdem die lokale Suche und erweitert die automatisierten Tests.
 
-[Neueste Version ansehen](https://github.com/LauaAhmed1/ohmbot/releases/latest)
+[GitHub-Releases ansehen](https://github.com/LauaAhmed1/ohmbot/releases)
 
 ## Projektdateien
 
