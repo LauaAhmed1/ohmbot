@@ -63,6 +63,9 @@ Bei jeder Frage auf Studiengang/Jahrgang, Zahlen, Bedingungen und Quellen achten
 - Quellen öffnen passende offizielle Seite; PDF-Link springt nach Möglichkeit zur genannten Seite.
 - Fehlender API-Key, ungültiger Key, erschöpftes Guthaben, Anbieter-Ratenlimit und Timeout liefern gespeicherte Informationen mit Quellen und der Kennzeichnung „Basis-Modus“. Allgemeine Aufgaben bekommen einen Hinweis. Das Netlify-Ratenlimit bleibt eine Fehlermeldung.
 - iframe und aufklappbares Widget funktionieren nach Austausch der Domain.
+- Neues Design 2.2: Roboter und Symbole sichtbar, Einstiegskarten senden die richtige Frage. Auf Smartphone „Themen & Links“ öffnen, per Escape schließen, anschließend wieder tippen können.
+- Lange Antworten beginnen sichtbar am Antwortkopf; Titel, Geltungsbereich, Basis-Abzeichen und Quellen sind voneinander unterscheidbar.
+- Betriebssystem auf „Bewegung reduzieren“ stellen: Roboter, Hover und Ladeanimation bewegen sich nicht mehr.
 - `/data/thn_knowledge.json`, `/.env` und `/lib/chat-service.js` dürfen nicht als öffentliche Dateien ausgeliefert werden.
 
 Fachliche Fehler zuerst dem richtigen Bereich zuordnen: fehlender/fehlerhafter Eintrag, unpassende Suche, falsche KI-Ableitung oder veralteter Deploy. Nur am Prompt zu drehen behebt keine falschen Quelldaten.

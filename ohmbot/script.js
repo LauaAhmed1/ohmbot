@@ -8,6 +8,29 @@ let history = [];
 let pending = null;
 let controller = null;
 let generation = 0;
+const svgNamespace = 'http://www.w3.org/2000/svg';
+const mobileLayout = matchMedia('(max-width: 900px)');
+
+function closeTopics() {
+  document.body.classList.remove('nav-open');
+  $('topics-toggle').setAttribute('aria-expanded', 'false');
+  $('topics-toggle').lastElementChild.textContent = '＋';
+  $('chat-scroll').inert = false;
+  document.querySelector('.composer-area').inert = false;
+}
+$('topics-toggle').addEventListener('click', () => {
+  if (document.body.classList.contains('nav-open')) { closeTopics(); return; }
+  document.body.classList.add('nav-open');
+  $('topics-toggle').setAttribute('aria-expanded', 'true');
+  $('topics-toggle').lastElementChild.textContent = '−';
+  $('chat-scroll').inert = true;
+  document.querySelector('.composer-area').inert = true;
+  $('new-chat').focus();
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && document.body.classList.contains('nav-open')) { closeTopics(); $('topics-toggle').focus(); }
+});
+mobileLayout.addEventListener('change', closeTopics);
 
 if (new URLSearchParams(location.search).get('embed') === '1') document.body.classList.add('embed');
 if (document.body.dataset.mode === 'demo') {
@@ -22,6 +45,10 @@ function element(tag, className, text) {
   return node;
 }
 function scrollDown() { $('chat-scroll').scrollTop = $('chat-scroll').scrollHeight; }
+function scrollToAnswer(article) {
+  const scroll = $('chat-scroll');
+  scroll.scrollTop += article.getBoundingClientRect().top - scroll.getBoundingClientRect().top - 16;
+}
 function resizeInput() {
   input.style.height = 'auto';
   input.style.height = `${Math.min(input.scrollHeight, 125)}px`;
@@ -38,7 +65,17 @@ function setBusy(busy) {
 function addMessage(role, text) {
   const article = element('article', `message ${role}`);
   const header = element('div', 'message-header');
-  if (role === 'assistant') header.append(element('span', 'avatar', 'O'));
+  if (role === 'assistant') {
+    const avatar = element('span', 'avatar');
+    avatar.setAttribute('aria-hidden', 'true');
+    const robot = document.createElementNS(svgNamespace, 'svg');
+    robot.classList.add('robot');
+    const use = document.createElementNS(svgNamespace, 'use');
+    use.setAttribute('href', '#robot');
+    robot.append(use);
+    avatar.append(robot);
+    header.append(avatar);
+  }
   header.append(element('span', '', role === 'user' ? 'Du' : 'OhmBot'));
   article.append(header);
   if (text) article.append(element('p', '', text));
@@ -47,10 +84,13 @@ function addMessage(role, text) {
 }
 function renderAnswer(data) {
   const article = addMessage('assistant', data.message);
-  if (data.mode === 'basis') article.querySelector('.message-header').append(element('span', 'answer-notice', 'Basis-Modus'));
+  if (data.mode === 'basis') article.querySelector('.message-header').append(element('span', 'basis-badge', 'Basis-Modus'));
   for (const block of data.blocks) {
     if (block.title) article.append(element('h2', '', block.title));
-    article.append(element('p', '', block.text));
+    const stored = data.mode === 'basis' && block.text.match(/^([^\n]+)\n(Geltungsbereich: [^\n]+)\n\n([\s\S]+)$/);
+    if (stored) {
+      article.append(element('h2', '', stored[1]), element('p', 'scope-note', stored[2]), element('p', '', stored[3]));
+    } else article.append(element('p', '', block.text));
     if (block.citations?.length) article.append(element('small', 'paragraph-citations', `Belege: ${block.citations.map((n) => `[${n}]`).join(' ')}`));
   }
   if (data.notice) article.append(element('p', 'answer-notice', data.notice));
@@ -69,10 +109,12 @@ function renderAnswer(data) {
     }
     article.append(sources);
   }
+  return article;
 }
 async function sendQuestion(text, retry = false) {
   if (controller) return;
   if (!text || text.length > maxLength) return;
+  closeTopics();
   if (!retry) {
     // Bei einem neuen Versuch mit anderem Text zählt die gescheiterte Frage nicht zum Kontext.
     pending = { text };
@@ -88,6 +130,7 @@ async function sendQuestion(text, retry = false) {
   const requestController = new AbortController();
   controller = requestController;
   const timeout = setTimeout(() => requestController.abort(), 55000);
+  let responseArticle = null;
   try {
     const response = await fetch('/api/chat', {
       method: 'POST',
@@ -103,7 +146,7 @@ async function sendQuestion(text, retry = false) {
     }
     if (!data || !Array.isArray(data.blocks) || !Array.isArray(data.sources)) throw new Error('Die Antwort konnte nicht gelesen werden. Bitte versuche es erneut.');
     if (currentGeneration !== generation) return;
-    renderAnswer(data);
+    responseArticle = renderAnswer(data);
     const answerContext = [data.message, ...data.blocks.map((block) => block.text)].filter(Boolean).join('\n').slice(0, 1500);
     history.push({ role: 'user', content: text }, { role: 'assistant', content: answerContext });
     history = history.slice(-6);
@@ -117,7 +160,8 @@ async function sendQuestion(text, retry = false) {
     if (currentGeneration === generation) {
       controller = null;
       setBusy(false);
-      scrollDown();
+      if (responseArticle) scrollToAnswer(responseArticle);
+      else scrollDown();
       input.focus({ preventScroll: true });
     }
   }
@@ -127,9 +171,15 @@ input.addEventListener('input', resizeInput);
 input.addEventListener('keydown', (event) => {
   if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) { event.preventDefault(); form.requestSubmit(); }
 });
-document.querySelectorAll('[data-question]').forEach((button) => button.addEventListener('click', () => sendQuestion(button.dataset.question)));
+document.querySelectorAll('[data-question]').forEach((button) => button.addEventListener('click', () => {
+  if (controller) return;
+  document.querySelectorAll('.topic').forEach((topic) => topic.classList.toggle('is-active', topic.dataset.question === button.dataset.question));
+  sendQuestion(button.dataset.question);
+}));
 $('retry').addEventListener('click', () => { if (pending) sendQuestion(pending.text, true); });
 function resetChat() {
+  closeTopics();
+  document.querySelectorAll('.topic').forEach((topic) => topic.classList.remove('is-active'));
   generation += 1;
   controller?.abort();
   controller = null;
