@@ -13,14 +13,15 @@ OhmBot ist ein studentischer Chatbot für Fragen rund um das Studium an der Tech
 - Antworten zu ECTS-Grenzen, Praxissemester und Bachelorarbeit
 - Quellenangaben bei hochschulbezogenen Antworten
 - Unterstützung für allgemeine Fragen und Smalltalk
-- Responsive Oberfläche für Desktop und Smartphone
+- Responsive Oberfläche im Ohm-Stil für Desktop, Tablet und Smartphone
+- Automatischer Basis-Modus mit Quellen, wenn die KI nicht verfügbar ist
 - Einbindung in andere Websites als Chat-Widget möglich
 
 ## Aktuelle Version
 
-**OhmBot v2.1.0**
+**OhmBot v2.2.0 – Neues Design im Ohm-Stil**
 
-Wenn OpenAI nicht verfügbar ist, wechselt OhmBot automatisch in den Basis-Modus und zeigt passende Informationen aus der Wissensbasis mit Quellen an. Das Update verbessert außerdem die lokale Suche und erweitert die automatisierten Tests.
+OhmBot hat eine komplett überarbeitete Oberfläche im Stil der TH Nürnberg: neue Startansicht mit vier Themenkarten, eigenes Roboter-Maskottchen, modernisierte Chatnachrichten und Quellenkarten sowie ein aufklappbares Themenmenü auf Smartphones und Tablets. Außerdem wurden Tastaturbedienung und das eingebettete Chat-Widget verbessert; die Einstellung „Bewegung reduzieren“ wird unterstützt. Der automatische Basis-Modus aus v2.1.0 bleibt erhalten.
 
 [GitHub-Releases ansehen](https://github.com/LauaAhmed1/ohmbot/releases)
 
