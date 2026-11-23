@@ -17,6 +17,12 @@ OhmBot ist ein studentischer Chatbot für Fragen rund um das Studium an der Tech
 - Automatischer Basis-Modus mit Quellen, wenn die KI nicht verfügbar ist
 - Einbindung in andere Websites als Chat-Widget möglich
 
+## Basis-Modus bei KI-Ausfall
+
+Fehlt der OpenAI-Schlüssel, ist er ungültig, ist das Kontingent erschöpft oder antwortet der KI-Dienst nicht, wechselt OhmBot automatisch in den Basis-Modus. Bei passenden Treffern antwortet er aus der hinterlegten THN-Wissensbasis mit Quellen und kennzeichnet die Antwort als „Basis-Modus“. Bei der nächsten Anfrage versucht OhmBot erneut, einen vorhandenen Schlüssel zu nutzen.
+
+Für den Basis-Modus müssen die Webseite und die Netlify-Funktion erreichbar sein. [Technische Details zum Basis-Modus](./ohmbot/README.md#neu-in-210-automatischer-basis-modus)
+
 ## Aktuelle Version
 
 **OhmBot v2.2.0 – Neues Design im Ohm-Stil**
