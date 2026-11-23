@@ -5,7 +5,8 @@ function setOpen(open) {
   if (open && !frame.getAttribute('src')) frame.src = frame.dataset.src;
   panel.hidden = !open;
   toggle.setAttribute('aria-expanded', String(open));
-  toggle.textContent = open ? 'OhmBot schließen ×' : 'OhmBot öffnen ↗';
+  document.getElementById('widget-label').textContent = open ? 'OhmBot schließen' : 'OhmBot öffnen';
+  document.getElementById('widget-symbol').textContent = open ? '×' : '↗';
   if (!open) toggle.focus();
 }
 toggle.addEventListener('click', () => setOpen(panel.hidden));

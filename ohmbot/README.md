@@ -1,10 +1,21 @@
-# OhmBot – Version 2.1.0
+# OhmBot – Version 2.2.0
 
 Studierendenprojekt für die TH Nürnberg: einfache HTML/CSS/JavaScript-Webseite, Netlify Function und OpenAI. Kein Frontend-Framework, keine Vektordatenbank und keine npm-Laufzeitpakete. Recherchestand: **20.09.2026**.
 
 Das Update erweitert die Wissensbasis auf **518 Einträge aus 42 offiziellen Quellen**, darunter **414 Moduleinträge** für Bachelor und Master Informatik, Medieninformatik und Wirtschaftsinformatik. Gemeinsame Module werden je Studiengang separat geführt. Das ist ein umfangreicher, datierter Bestand, keine vollständige oder amtliche Hochschulauskunft.
 
 ## Was sich geändert hat
+
+### Neu in 2.2.0: neue Oberfläche im Ohm-Stil
+
+- Rote und dunkelblaue Wortmarke, klare Typografie und mehr Weißraum.
+- Eigener SVG-Roboter auf der Startseite und als Avatar der Antworten; dezentes Schweben und Blinzeln. Bei aktivierter Systemeinstellung „Bewegung reduzieren“ sind die Animationen deaktiviert.
+- Vier neue Einstiegskarten, überarbeitete Chatnachrichten und übersichtliche Quellenkarten.
+- Themen und Hochschul-Links sind auf schmalen Bildschirmen über „Themen & Links“ erreichbar. Mit Escape schließen, mit „Neuer Chat“ zurück zur Startansicht.
+- Angepasste Darstellung für Smartphone und eingebettetes Chat-Widget (`?embed=1`).
+- Keine zusätzlichen Schrift-, Bild- oder Animationsdienste; alle Designelemente werden mit der Website ausgeliefert.
+
+KI-Antwortlogik, gespeicherte Wissensbasis und automatischer Basis-Modus aus 2.1.0 sind weiterhin enthalten. Die Wissensdaten wurden für das Design-Update nicht neu recherchiert.
 
 ### Neu in 2.1.0: automatischer Basis-Modus
 
@@ -180,7 +191,7 @@ Das API-Guthaben ist vom ChatGPT-Abo getrennt. Über [API-Nutzung](https://platf
   loading="lazy" referrerpolicy="no-referrer"></iframe>
 ```
 
-`?embed=1` blendet die Seitenleiste aus. `embed-example.html`, `embed-example.css` und `embed-example.js` zeigen außerdem ein aufklappbares Widget unten rechts. Die Widget-Elemente und Dateien in die Gastseite übernehmen; dort beim iframe `data-src="./?embed=1"` durch die vollständige OhmBot-Adresse ersetzen. Das iframe lädt erst beim ersten Öffnen.
+`?embed=1` blendet die Seitenleiste aus. `embed-example.html`, `embed-example.css` und `embed-example.js` zeigen außerdem ein aufklappbares Widget unten rechts. Die Widget-Elemente und Dateien in die Gastseite übernehmen; dort beim iframe `data-src="./?embed=1"` durch die vollständige OhmBot-Adresse ersetzen. Für das Roboter-Symbol im Öffnen-Button `favicon.svg` mit übernehmen oder dessen `src` auf `https://ohmbot.netlify.app/favicon.svg` setzen. Das iframe lädt erst beim ersten Öffnen.
 
 Die API bleibt auf der OhmBot-Domain, offene CORS-Freigaben sind nicht nötig. Die Content-Security-Policy in `netlify.toml` erlaubt zunächst HTTPS-Gastseiten. Für eine feste Integration `frame-ancestors` auf die konkret erlaubten Domains begrenzen. Die Gastseite muss die OhmBot-Domain in ihrem `frame-src` erlauben.
 
@@ -203,6 +214,6 @@ Anbieterfehler und Schlüssel werden nicht an den Browser gespiegelt. Der Verlau
 
 Für fünf Personen bieten sich Oberfläche, Backend, Wissensredaktion, Tests und Betrieb als Arbeitsbereiche an. Prüfungsregeln und Fristen im Vier-Augen-Prinzip abnehmen. Testfragen bei jeder Wissensänderung mitpflegen.
 
-Prüfstand 2.1.0: 45 automatische Tests ohne echte API-Aufrufe bestanden. Sie prüfen unter anderem fehlenden Key, Anbieterfehler, Guthabenfehler, Timeout, Rückkehr zur KI, Quellen, Aktualität und Not-Aus. Die Anbieterantworten werden in diesen Tests simuliert; ein echter OpenAI-Aufruf und die Veröffentlichung gehören nicht zu dieser Lieferung. Fachliche Abdeckung und bekannte Lücken stehen in `WISSENSBASIS.md`.
+Prüfstand 2.2.0: 45 automatische Tests ohne echte API-Aufrufe bestanden; JavaScript-Syntax und Build geprüft. Die Tests prüfen unter anderem fehlenden Key, Anbieterfehler, Guthabenfehler, Timeout, Rückkehr zur KI, Quellen, Aktualität und Not-Aus. Die Anbieterantworten werden dabei simuliert. Im lokalen Browser wurden Einstiegskarten, freie Begrüßung, Chat-Neustart, Quellen, Basis-Abzeichen, mobiles Themenmenü inklusive Escape und das aufklappbare iframe-Widget geprüft. Bei 320, 768, 1024 und 1920 Pixeln Breite gab es keine horizontale Überbreite; die Eingabe blieb sichtbar. Ein echter OpenAI-Aufruf und die Veröffentlichung gehören nicht zu dieser Lieferung. Fachliche Abdeckung und bekannte Lücken stehen in `WISSENSBASIS.md`.
 
 Technische Referenzen: [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [Netlify Functions](https://docs.netlify.com/build/functions/overview/), [Function-Umgebungsvariablen](https://docs.netlify.com/build/functions/environment-variables/).

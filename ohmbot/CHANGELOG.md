@@ -1,5 +1,19 @@
 # Änderungen
 
+## 2.2.0 – 07.10.2026
+
+Neue OhmBot-Oberfläche mit Ohm-Rot, dunkler Typografie und einem eigenen Roboter-Maskottchen.
+
+- Neue Startansicht mit vier Themenkarten und einem dezent animierten SVG-Roboter.
+- Überarbeitete Wortmarke, Seitenleiste, Eingabe und Chatnachrichten.
+- Roboter-Avatar, Quellenkarten und deutliches Abzeichen für den Basis-Modus.
+- Aufklappbare Themen und Hochschul-Links auf Smartphone und Tablet.
+- Angepasste Einbettungsansicht und neues Roboter-Favicon.
+- Animationen respektieren „Bewegung reduzieren“; Tastaturfokus und Escape-Bedienung für das Themenmenü.
+- Keine zusätzlichen Laufzeitpakete oder extern geladenen Designelemente.
+
+KI-Zugang, Wissensbestand, Sicherheitsprüfungen und automatischer Basis-Modus aus 2.1.0 sind enthalten.
+
 ## 2.1.0 – 07.10.2026
 
 OhmBot bleibt bei einem fehlenden oder ungültigen API-Key, erschöpftem Guthaben sowie einem Ausfall des KI-Dienstes für gespeicherte Hochschulinformationen benutzbar. Mit funktionierendem Zugang werden weiterhin die bisherigen KI-Antworten erzeugt.

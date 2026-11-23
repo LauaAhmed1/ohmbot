@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#c62829">
+  <meta name="theme-color" content="#c8202a">
   <meta name="description" content="OhmBot – Orientierung rund um dein Studium an der TH Nürnberg. Ein studentisches IT-Projekt mit nachvollziehbaren Quellen.">
   <title>OhmBot · Dein Studium. Deine Fragen.</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -11,23 +11,47 @@
   <script src="script.js" defer></script>
 </head>
 <body data-mode="live">
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="robot" viewBox="0 0 160 172">
+        <path d="M80 28V15" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+        <circle class="robot-antenna" cx="80" cy="11" r="7" fill="currentColor"/>
+        <rect x="17" y="59" width="15" height="31" rx="7" fill="currentColor"/>
+        <rect x="128" y="59" width="15" height="31" rx="7" fill="currentColor"/>
+        <rect x="28" y="30" width="104" height="83" rx="29" fill="white" stroke="currentColor" stroke-width="5"/>
+        <rect x="42" y="47" width="76" height="44" rx="17" fill="#fce9ea"/>
+        <g class="robot-eyes" fill="currentColor"><rect x="56" y="60" width="10" height="17" rx="5"/><rect x="94" y="60" width="10" height="17" rx="5"/></g>
+        <path d="M72 91q8 7 16 0" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+        <path d="M54 116h52l9 31q2 9-8 9H53q-10 0-8-9Z" fill="currentColor"/>
+        <path d="M48 124l-13 12m77-12 13 12" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+        <rect x="65" y="128" width="30" height="14" rx="7" fill="white"/><circle cx="80" cy="135" r="3" fill="currentColor"/>
+        <path d="M62 157v7m36-7v7" stroke="currentColor" stroke-width="7" stroke-linecap="round"/>
+      </symbol>
+      <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+      <symbol id="icon-book" viewBox="0 0 24 24"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15"/></symbol>
+      <symbol id="icon-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 3v4m10-4v4M3 11h18m-13 5h2m4 0h2"/></symbol>
+      <symbol id="icon-case" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="3"/><path d="M8 7V4h8v3M3 12c5 3 13 3 18 0m-9 1v4"/></symbol>
+      <symbol id="icon-chat" viewBox="0 0 24 24"><path d="M21 11a8 8 0 0 1-8 8H8l-5 3V11a9 9 0 0 1 18 0Z"/><path d="M8 11h.01M12 11h.01M16 11h.01" stroke-width="3"/></symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    </defs>
+  </svg>
   <a class="skip-link" href="#question">Zum Chat springen</a>
   <header class="topbar">
-    <a class="brand" href="./" aria-label="OhmBot Startseite"><span class="brand-mark" aria-hidden="true">o<span></span></span>OhmBot<span class="project-tag">STUDIERENDENPROJEKT</span></a>
+    <a class="brand" href="./" aria-label="OhmBot Startseite"><span class="brand-word">ohm<span>bot</span><span class="brand-period">.</span></span><span class="project-tag">Dein Studium.<br>Dein Begleiter.</span></a>
     <button class="mobile-reset" id="new-chat-top" type="button">＋ Neuer Chat</button>
-    <a class="university-link" href="https://www.th-nuernberg.de/" target="_blank" rel="noopener noreferrer">TH Nürnberg <span aria-hidden="true">↗</span></a>
+    <div class="header-meta"><span class="student-project">Ein Studierendenprojekt</span><a class="university-link" href="https://www.th-nuernberg.de/" target="_blank" rel="noopener noreferrer">TH Nürnberg <span aria-hidden="true">↗</span></a></div>
   </header>
   <div class="app-layout">
-    <aside class="sidebar" aria-label="Orientierung">
+    <aside class="sidebar" id="sidebar" aria-label="Themen und Hochschul-Links">
       <div>
-        <div class="sidebar-label">DEIN STUDIENBEGLEITER</div>
+        <div class="sidebar-heading"><span class="sidebar-label">DEIN STUDIENBEGLEITER</span><span class="sidebar-version">v2.2</span></div>
         <button class="new-chat" id="new-chat" type="button"><span aria-hidden="true">＋</span> Neuer Chat</button>
         <div class="sidebar-section">
           <p class="sidebar-label">WOBEI ICH HELFEN KANN</p>
-          <button class="topic" data-question="Was unterscheidet Informatik, Medieninformatik und Wirtschaftsinformatik?"><span aria-hidden="true">01</span> Unsere Studiengänge <span aria-hidden="true">↗</span></button>
-          <button class="topic" data-question="Wann ist die Prüfungsanmeldung im Wintersemester 2026/27?"><span aria-hidden="true">02</span> Prüfungen & Termine <span aria-hidden="true">↗</span></button>
-          <button class="topic" data-question="Was muss ich zum Praxissemester in Informatik wissen?"><span aria-hidden="true">03</span> Praxissemester <span aria-hidden="true">↗</span></button>
-          <button class="topic" data-question="Wo finde ich SPO, Studienplan und Modulhandbuch für Informatik?"><span aria-hidden="true">04</span> Studiendokumente <span aria-hidden="true">↗</span></button>
+          <button class="topic" data-question="Was unterscheidet Informatik, Medieninformatik und Wirtschaftsinformatik?"><svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg> Unsere Studiengänge <span aria-hidden="true">↗</span></button>
+          <button class="topic" data-question="Wann ist die Prüfungsanmeldung im Wintersemester 2026/27?"><svg class="icon" aria-hidden="true"><use href="#icon-calendar"/></svg> Prüfungen & Termine <span aria-hidden="true">↗</span></button>
+          <button class="topic" data-question="Was muss ich zum Praxissemester in Informatik wissen?"><svg class="icon" aria-hidden="true"><use href="#icon-case"/></svg> Praxissemester <span aria-hidden="true">↗</span></button>
+          <button class="topic" data-question="Wo finde ich SPO, Studienplan und Modulhandbuch für Informatik?"><svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg> Studiendokumente <span aria-hidden="true">↗</span></button>
         </div>
         <div class="sidebar-section official-links">
           <p class="sidebar-label">DIREKT ZUR HOCHSCHULE</p>
@@ -36,22 +60,25 @@
           <a href="https://www.th-nuernberg.de/studium-karriere/wichtiges-zum-studienstart/termine-im-ueberblick/wintersemester/" target="_blank" rel="noopener noreferrer">Semestertermine <span aria-hidden="true">↗</span></a>
         </div>
       </div>
-      <div class="source-note"><span class="source-icon" aria-hidden="true">↗</span><strong>Wissen mit Quellen.</strong><p>Hochschulauskünfte mit Fundstellen. Allgemeine Fragen beantworte ich mit KI-Wissen. Frag gern nach und beachte den Stand der Quellen.</p><small>Ein IT-Projekt an der TH Nürnberg.<br>Kein offizielles Auskunftsangebot.</small></div>
+      <div class="source-note"><span class="source-note-title"><svg class="icon" aria-hidden="true"><use href="#icon-check"/></svg><strong>Wissen, das du nachlesen kannst.</strong></span><p>Zu Hochschulinformationen findest du die passenden Originalquellen direkt in der Antwort.</p><small>Ein IT-Projekt an der TH Nürnberg.<br>Kein offizielles Auskunftsangebot.</small></div>
     </aside>
     <main class="main-panel" id="main">
-      <div class="chat-topline"><span><span class="status-dot" aria-hidden="true"></span> Orientierung für dein Studium</span><span class="focus-label">FAKULTÄT INFORMATIK · BACHELOR & MASTER</span></div>
+      <div class="chat-topline"><span class="chat-context"><span class="status-dot" aria-hidden="true"></span> Dein Raum für Fragen</span><span class="focus-label">Fakultät Informatik <span aria-hidden="true">/</span> Bachelor & Master</span><button class="topics-toggle" id="topics-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Themen & Links <span aria-hidden="true">＋</span></button></div>
       <p class="demo-banner" id="demo-banner" hidden>Lokale Demo ohne KI: Antworten werden zum Testen über Stichwörter ausgewählt. Es werden keine Daten an OpenAI gesendet.</p>
       <section class="chat-scroll" id="chat-scroll" aria-label="Chat mit OhmBot">
         <div class="welcome" id="welcome">
-          <div class="eyebrow">FRAGEN GEHÖREN ZUM STUDIUM.</div>
-          <h1>Dein Studium.<br>Deine Fragen. <span>OhmBot.</span></h1>
-          <p class="welcome-text">Hallo, ich bin OhmBot. Wie kann ich dir bei Fragen rund um dein Studium an der TH Nürnberg helfen? Auch andere Fragen sind willkommen.</p>
-          <div class="quick-questions" aria-label="Beispielfragen">
-            <button data-question="Wie viele ECTS brauche ich für den zweiten Studienabschnitt?"><span class="card-number">01 / STUDIUM</span><strong>Wie viele ECTS brauche ich zum Weiterkommen?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
-            <button data-question="Was muss ich zum Praxissemester in Informatik wissen?"><span class="card-number">02 / PRAXIS</span><strong>Was erwartet mich im Praxissemester?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
-            <button data-question="Was unterscheidet Informatik, Medieninformatik und Wirtschaftsinformatik?"><span class="card-number">03 / STUDIENGÄNGE</span><strong>Informatik, Medieninformatik oder Winfo?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
-            <button data-question="Wer berät mich zum Bachelor Informatik?"><span class="card-number">04 / BERATUNG</span><strong>Wer hilft mir bei Studienfragen?</strong><span class="card-arrow" aria-hidden="true">↗</span></button>
+          <div class="hero">
+            <div class="hero-copy"><div class="eyebrow"><span aria-hidden="true"></span> HALLO, ICH BIN OHMBOT</div><h1>Dein Studium.<br><span>Ein Stück klarer.</span></h1><p class="welcome-text">Von der ersten Vorlesung bis zur Abschlussarbeit: Stell deine Fragen. Wir finden gemeinsam den nächsten Schritt.</p></div>
+            <div class="mascot" aria-hidden="true"><div class="mascot-orbit"></div><span class="mascot-spark spark-one">＋</span><span class="mascot-spark spark-two">＋</span><svg class="robot hero-robot"><use href="#robot"/></svg><span class="mascot-label">Frag einfach.</span></div>
           </div>
+          <div class="suggestions-heading"><h2>Wo möchtest du anfangen?</h2><span>Zum Beispiel hier</span></div>
+          <div class="quick-questions" aria-label="Beispielfragen">
+            <button data-question="Wie viele ECTS brauche ich für den zweiten Studienabschnitt?"><span class="card-top"><svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg><span class="card-number">STUDIUM & ECTS</span></span><strong>Wie komme ich im Studium weiter?</strong><span class="card-bottom">ECTS & Studienabschnitte <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></span></button>
+            <button data-question="Was muss ich zum Praxissemester in Informatik wissen?"><span class="card-top"><svg class="icon" aria-hidden="true"><use href="#icon-case"/></svg><span class="card-number">REIN IN DIE PRAXIS</span></span><strong>Was erwartet mich im Praxissemester?</strong><span class="card-bottom">Voraussetzungen & Ablauf <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></span></button>
+            <button data-question="Was unterscheidet Informatik, Medieninformatik und Wirtschaftsinformatik?"><span class="card-top"><svg class="icon" aria-hidden="true"><use href="#icon-book"/></svg><span class="card-number">DEIN STUDIENGANG</span></span><strong>Informatik, Medieninformatik oder Winfo?</strong><span class="card-bottom">Die Studiengänge im Überblick <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></span></button>
+            <button data-question="Wer berät mich zum Bachelor Informatik?"><span class="card-top"><svg class="icon" aria-hidden="true"><use href="#icon-chat"/></svg><span class="card-number">GUT BERATEN</span></span><strong>Wer hilft mir bei meinen Studienfragen?</strong><span class="card-bottom">Ansprechpersonen finden <svg class="icon" aria-hidden="true"><use href="#icon-arrow"/></svg></span></button>
+          </div>
+          <p class="welcome-hint">Oder frag einfach drauflos. Auch ein „Hallo“ ist ein guter Anfang.</p>
         </div>
         <div class="messages" id="messages" role="log" aria-label="Chatverlauf" aria-live="polite" aria-relevant="additions"></div>
       </section>
@@ -60,8 +87,8 @@
         <div class="loading" id="loading" role="status" hidden><span class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></span> OhmBot bearbeitet deine Frage …</div>
         <form id="chat-form" class="composer">
           <label for="question" class="sr-only">Deine Frage an OhmBot</label>
-          <textarea id="question" name="question" placeholder="Frag OhmBot …" rows="1" maxlength="1500" required aria-describedby="input-help privacy-note"></textarea>
-          <button class="send-button" id="send" type="submit" aria-label="Frage senden"><span class="send-label">Senden</span><span aria-hidden="true">↑</span></button>
+          <textarea id="question" name="question" placeholder="Was möchtest du wissen?" rows="1" maxlength="1500" required aria-describedby="input-help privacy-note"></textarea>
+          <button class="send-button" id="send" type="submit" aria-label="Frage senden"><span class="send-label">Senden</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6"/></svg></button>
         </form>
         <div class="input-meta"><span id="input-help">Enter zum Senden · Shift + Enter für eine neue Zeile</span><span id="char-count">0 / 1500</span></div>
         <p class="privacy-note" id="privacy-note">Bitte keine persönlichen Daten eingeben. Für KI-Antworten werden Frage, letzter Gesprächskontext und passende Wissenseinträge an OpenAI übermittelt. Der Verlauf bleibt nur in diesem Tab.</p>
